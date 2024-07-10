@@ -27,8 +27,15 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-    ...FontAwesome.font,
+    notoSans1: require("../assets/fonts/NotoSansKR-Thin.ttf"),
+    notoSans2: require("../assets/fonts/NotoSansKR-ExtraLight.ttf"),
+    notoSans3: require("../assets/fonts/NotoSansKR-Light.ttf"),
+    notoSans4: require("../assets/fonts/NotoSansKR-Regular.ttf"),
+    notoSans5: require("../assets/fonts/NotoSansKR-Medium.ttf"),
+    notoSans6: require("../assets/fonts/NotoSansKR-SemiBold.ttf"),
+    notoSans7: require("../assets/fonts/NotoSansKR-Bold.ttf"),
+    notoSans8: require("../assets/fonts/NotoSansKR-ExtraBold.ttf"),
+    notoSans9: require("../assets/fonts/NotoSansKR-Black.ttf"),
   });
 
   // 네비게이션 트리에서 오류를 잡기 위해 Expo Router가 Error Boundaries를 사용함
@@ -56,20 +63,13 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    // 테마를 다크 모드나 기본 테마로 설정하여 ThemeProvider로 감쌈
-      <Stack initialRouteName="signup">
-        {/* 회원가입 화면을 초기 경로로 설정 */}
-        <Stack.Screen
-          name="signup"
-          options={{ headerShown: false }}
-        />
+    <Stack initialRouteName="signup">
+      <Stack.Screen name="signup" options={{ headerShown: false }} />
+      <Stack.Screen name="login" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
-        {/* 탭 네비게이션을 설정하고 헤더를 숨김 */}
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-
-        {/* 모달 화면을 설정 */}
-        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-      </Stack>
-
+      {/* 모달 화면을 설정 */}
+      <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+    </Stack>
   );
 }
