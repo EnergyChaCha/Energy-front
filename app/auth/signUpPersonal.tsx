@@ -11,11 +11,11 @@ import { useNavigation } from "@react-navigation/native";
 import Colors from "@/constants/Colors";
 import CustomTextInput from "@/components/CustomTextInput";
 
-const SignUpForm = () => {
+const SignUpPersonalScreen = () => {
   const [form, setForm] = useState({
     name: "",
     phone: "",
-    birth: null,
+    birth: undefined,
     gender: "",
     address: "",
   });
@@ -28,13 +28,13 @@ const SignUpForm = () => {
     { label: "여성", value: "female" },
   ];
 
-  const handleChange = (name: string, value: string|number) => {
+  const handleChange = (name: string, value: string | number) => {
     setForm({ ...form, [name]: value });
   };
 
   const navigation = useNavigation();
   const handleSignUp = () => {
-    navigation.navigate("auth/signUp_work");
+    navigation.navigate("auth/signUpWork");
   };
 
   return (
@@ -119,4 +119,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUpForm;
+export default SignUpPersonalScreen;

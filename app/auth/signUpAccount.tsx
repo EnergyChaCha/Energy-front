@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import Colors from "@/constants/Colors";
 import CustomTextInput from "@/components/CustomTextInput";
 
-const SignUpForm = () => {
+const SignUpAccountScreen = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [form, setForm] = useState({
     id: "",
@@ -42,7 +42,7 @@ const SignUpForm = () => {
       Alert.alert("필수 항목을 모두 입력해주세요.");
       return;
     }
-    navigation.navigate("auth/signUp_personal", { form });
+    navigation.navigate("auth/signUpPersonal", { form });
   };
 
   return (
@@ -121,4 +121,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUpForm;
+export default SignUpAccountScreen;

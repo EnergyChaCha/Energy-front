@@ -3,14 +3,12 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { FontAwesome5, MaterialIcons, Octicons } from "@expo/vector-icons";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 
-import { Link, Tabs } from 'expo-router';
+import { Link, Tabs, useNavigation } from "expo-router";
 import { Pressable } from 'react-native';
 
 import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
 
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
+
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
   color: string;
@@ -20,19 +18,49 @@ function TabBarIcon(props: {
 
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+  const navigation = useNavigation();
   return (
     <Tabs
       screenOptions={{
-        headerShown: useClientOnlyValue(false, true),
+        headerStyle: {},
+        headerTitleStyle: {
+          fontWeight: "bold",
+          fontSize: 18,
+        },
+        headerTintColor: "#fff",
+        headerTitleAlign: "center",
+        headerLeft: () => (
+          <Pressable onPress={() => navigation.goBack()}>
+            <Ionicons
+              name="arrow-back"
+              size={24}
+              color="#000000"
+              style={{ marginLeft: 15 }}
+            />
+          </Pressable>
+        ),
+        headerRight: () => (
+          <Pressable onPress={() => navigation.navigate("Notifications")}>
+            <Ionicons
+              name="notifications"
+              size={24}
+              color="#000000"
+              style={{ marginRight: 15 }}
+            />
+          </Pressable>
+        ),
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: "Tab One",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon
+              name="code"
+              color={focused ? Colors.blue : Colors.navy}
+            />
+          ),
           headerRight: () => (
             <Link href="/modal" asChild>
               <Pressable>
@@ -40,7 +68,6 @@ export default function TabLayout() {
                   <FontAwesome
                     name="info-circle"
                     size={25}
-                    color={Colors[colorScheme ?? "light"].text}
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
                 )}
@@ -53,8 +80,12 @@ export default function TabLayout() {
         name="EmergencyReport"
         options={{
           title: "신고이력",
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="notification" size={24} color="black" />
+          tabBarIcon: ({ focused }) => (
+            <AntDesign
+              name="notification"
+              size={24}
+              color={focused ? Colors.blue : Colors.navy}
+            />
           ),
         }}
       />
@@ -63,8 +94,12 @@ export default function TabLayout() {
         name="HeartRateMonitoring"
         options={{
           title: "심박수",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome5 name="heartbeat" size={24} color="black" />
+          tabBarIcon: ({ focused }) => (
+            <FontAwesome5
+              name="heartbeat"
+              size={24}
+              color={focused ? Colors.blue : Colors.navy}
+            />
           ),
         }}
       />
@@ -73,8 +108,12 @@ export default function TabLayout() {
         name="SOS"
         options={{
           title: "SOS",
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons name="sos" size={24} color="black" />
+          tabBarIcon: ({ focused }) => (
+            <MaterialIcons
+              name="sos"
+              size={24}
+              color={focused ? Colors.blue : Colors.navy}
+            />
           ),
         }}
       />
@@ -83,8 +122,12 @@ export default function TabLayout() {
         name="Notifications"
         options={{
           title: "알림",
-          tabBarIcon: ({ color }) => (
-            <Octicons name="bell-fill" size={24} color="black" />
+          tabBarIcon: ({ focused }) => (
+            <Octicons
+              name="bell-fill"
+              size={24}
+              color={focused ? Colors.blue : Colors.navy}
+            />
           ),
         }}
       />
@@ -93,8 +136,12 @@ export default function TabLayout() {
         name="Setting"
         options={{
           title: "설정",
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="settings" size={24} color="black" />
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name="settings"
+              size={24}
+              color={focused ? Colors.blue : Colors.navy}
+            />
           ),
         }}
       />

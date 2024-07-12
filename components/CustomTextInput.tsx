@@ -5,7 +5,7 @@ import Colors from "@/constants/Colors";
 
 interface CustomTextInputProps {
   label: string;
-  value: string | null;
+  value: string | undefined;
   onChangeText: (text: string) => void;
   placeholder?: string;
   secureTextEntry?: boolean;
@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 14,
+    lineHeight:14,
     paddingHorizontal: 0,
     fontFamily: "notoSans4",
     borderBottomWidth: 1,

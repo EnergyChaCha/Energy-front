@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import Colors from "@/constants/Colors";
 import CustomTextInput from "@/components/CustomTextInput";
 
-const SignUpForm = () => {
+const SignUpHealthScreen = () => {
   const [form, setForm] = useState({
     emergencyContact: "",
     emergencyRelation: "",
@@ -140,4 +140,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUpForm;
+export default SignUpHealthScreen;

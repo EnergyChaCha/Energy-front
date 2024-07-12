@@ -1,6 +1,5 @@
 import React from "react";
-import { Text, View } from "./../Themed";
-import { StyleSheet, TextInput } from "react-native";
+import { Text, View, StyleSheet, TextInput } from "react-native";
 
 function SignUpForm() {
   return (

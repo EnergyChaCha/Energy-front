@@ -1,16 +1,10 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 
-import { useColorScheme } from "@/components/useColorScheme";
 
 export {
   // Layout 컴포넌트에서 발생하는 오류를 잡기 위한 ErrorBoundary를 내보냄
@@ -60,20 +54,22 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
   return (
-    <Stack initialRouteName="auth/signUp_account">
+    <Stack initialRouteName="auth/termsOfService">
       <Stack.Screen
-        name="auth/signUp_account"
+        name="auth/termsOfService"
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="auth/signUp_personal"
+        name="auth/signUpAccount"
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="auth/signUp_work" options={{ headerShown: false }} />
-      <Stack.Screen name="auth/signUp_health" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="auth/signUpPersonal"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="auth/signUpWork" options={{ headerShown: false }} />
+      <Stack.Screen name="auth/signUpHealth" options={{ headerShown: false }} />
       <Stack.Screen name="auth/login" options={{ headerShown: false }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 

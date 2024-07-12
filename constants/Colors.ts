@@ -19,6 +19,7 @@ export default {
   navy: "#2E4661",
   blue: "#3578FF",
   red: "#F74C4C",
+  gray: "#606060",
   divider: "#D9D9DE",
   placeholder: "#91929F",
   background_gray: "#F7F7F8",

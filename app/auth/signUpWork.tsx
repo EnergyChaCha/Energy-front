@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import Colors from "@/constants/Colors";
 import CustomTextInput from "@/components/CustomTextInput";
 
-const SignUpForm = () => {
+const SignUpWorkScreen = () => {
   const [form, setForm] = useState({
     job: "",
     workplace: "",
@@ -24,7 +24,7 @@ const SignUpForm = () => {
   const navigation = useNavigation();
 
   const handleSignUp = () => {
-    navigation.navigate("auth/signUp_health");
+    navigation.navigate("auth/signUpHealth");
   };
 
   return (
@@ -83,4 +83,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUpForm;
+export default SignUpWorkScreen;
