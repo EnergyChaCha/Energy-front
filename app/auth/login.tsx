@@ -2,19 +2,21 @@ import React, { useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import CustomTextInput from "@/components/CustomTextInput";
 import Colors from "@/constants/Colors";
+import { useNavigation } from "@react-navigation/native";
 
 const LoginScreen = () => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  const navigation = useNavigation();
+
   const handleLogin = () => {
     // 여기에 로그인 로직을 구현합니다.
     if (id !== "energy") {
       setErrorMessage("아이디와 비밀번호가 올바르지 않습니다.");
     } else {
-      setErrorMessage("");
-      // 로그인 성공 처리
+      navigation.navigate("(tabs)");
     }
   };
 
@@ -26,14 +28,16 @@ const LoginScreen = () => {
         label="아이디"
         value={id}
         onChangeText={setId}
-        placeholder="energy"
+        placeholder="id"
+        inputType="input"
       />
 
       <CustomTextInput
         label="비밀번호"
         value={password}
         onChangeText={setPassword}
-        placeholder="********"
+        placeholder="password"
+        inputType="input"
         secureTextEntry
       />
 
@@ -66,7 +70,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: "notoSans8",
     fontSize: 28,
-    marginBottom:10,
+    marginBottom: 10,
     color: Colors.navy,
   },
   errorMessage: {

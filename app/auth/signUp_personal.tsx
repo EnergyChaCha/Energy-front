@@ -5,34 +5,36 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  Alert
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "@/constants/Colors";
 import CustomTextInput from "@/components/CustomTextInput";
 
 const SignUpForm = () => {
-  const [name, setName] = useState("");
-  const [id, setId] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [phone, setPhone] = useState("");
-  const [birthdate, setBirthdate] = useState("");
-  const [gender, setGender] = useState("");
-  const [address, setAddress] = useState("");
-  const [workplace, setWorkplace] = useState("");
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    birth: null,
+    gender: "",
+    address: "",
+  });
+  const dropOption: {
+    label: string;
+    value: string;
+  }[] = [
+    { label: "선택해주세요", value: "" },
+    { label: "남성", value: "male" },
+    { label: "여성", value: "female" },
+  ];
 
+  const handleChange = (name: string, value: string|number) => {
+    setForm({ ...form, [name]: value });
+  };
 
   const navigation = useNavigation();
-
   const handleSignUp = () => {
-
-    Alert.alert("회원가입 완료", `이름: ${name}, 아이디: ${id}`, [
-      {
-        text: "확인",
-        onPress: () => navigation.navigate("login"),
-      },
-    ]);
+    navigation.navigate("auth/signUp_work");
   };
 
   return (
@@ -41,60 +43,43 @@ const SignUpForm = () => {
       <ScrollView style={styles.scroll}>
         <CustomTextInput
           label="이름"
-          value={name}
-          onChangeText={setName}
+          value={form.name}
+          onChangeText={(value) => handleChange("id", value)}
           placeholder="이름"
-        />
-        <CustomTextInput
-          label="아이디"
-          value={id}
-          onChangeText={setId}
-          placeholder="아이디"
-        />
-        <CustomTextInput
-          label="비밀번호"
-          value={password}
-          onChangeText={setPassword}
-          placeholder="비밀번호"
-          secureTextEntry
-        />
-        <CustomTextInput
-          label="비밀번호 확인"
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          placeholder="비밀번호 확인"
-          secureTextEntry
+          inputType="input"
+          required={true}
         />
         <CustomTextInput
           label="전화번호"
-          value={phone}
-          onChangeText={setPhone}
-          placeholder="전화번호"
+          value={form.phone}
+          onChangeText={(value) => handleChange("phone", value)}
+          placeholder="숫자만 입력해주세요."
           keyboardType="phone-pad"
+          inputType="number"
+          required={true}
         />
         <CustomTextInput
           label="생년월일"
-          value={birthdate}
-          onChangeText={setBirthdate}
-          placeholder="YYYY/MM/DD"
+          value={form.birth}
+          onChangeText={(value) => handleChange("birth", value)}
+          placeholder="YYYYMMDD (8글자로 입력해주세요)"
+          inputType="number"
+          required={true}
         />
         <CustomTextInput
           label="성별"
-          value={gender}
-          onChangeText={setGender}
+          value={form.gender}
+          onChangeText={(value) => handleChange("gender", value)}
           placeholder="성별"
+          inputType="dropdown"
+          options={dropOption}
         />
         <CustomTextInput
           label="주소"
-          value={address}
-          onChangeText={setAddress}
+          value={form.address}
+          onChangeText={(value) => handleChange("address", value)}
           placeholder="주소"
-        />
-        <CustomTextInput
-          label="근무지"
-          value={workplace}
-          onChangeText={setWorkplace}
-          placeholder="근무지"
+          inputType="input"
         />
       </ScrollView>
 

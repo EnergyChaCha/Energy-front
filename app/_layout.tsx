@@ -63,9 +63,18 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <Stack initialRouteName="signup">
-      <Stack.Screen name="signup" options={{ headerShown: false }} />
-      <Stack.Screen name="login" options={{ headerShown: false }} />
+    <Stack initialRouteName="auth/signUp_account">
+      <Stack.Screen
+        name="auth/signUp_account"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="auth/signUp_personal"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="auth/signUp_work" options={{ headerShown: false }} />
+      <Stack.Screen name="auth/signUp_health" options={{ headerShown: false }} />
+      <Stack.Screen name="auth/login" options={{ headerShown: false }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
       {/* 모달 화면을 설정 */}
