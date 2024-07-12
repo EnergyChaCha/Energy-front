@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
-import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "react-native";
+import Colors from "@/constants/Colors";
 
 export default function EmergencyReport() {
   return (
@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
   separator: {
     marginVertical: 30,
     height: 1,
+    backgroundColor: Colors.divider,
     width: "80%",
   },
 });

@@ -1,12 +1,15 @@
 import { StyleSheet } from 'react-native';
 
 import { Text, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 export default function TabOneScreen() {
+    const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
+      <Text style={styles.title} onPress={() => navigation.navigate("auth/login")}>Tab One</Text>
       <View style={styles.separator}/>
+      
     </View>
   );
 }

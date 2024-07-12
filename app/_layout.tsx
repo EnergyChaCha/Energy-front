@@ -55,7 +55,10 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
-    <Stack initialRouteName="auth/termsOfService">
+    <Stack initialRouteName="auth/login">
+      <Stack.Screen name="auth/login" options={{ headerShown: false }} />
+
+      
       <Stack.Screen
         name="auth/termsOfService"
         options={{ headerShown: false }}
@@ -70,7 +73,6 @@ function RootLayoutNav() {
       />
       <Stack.Screen name="auth/signUpWork" options={{ headerShown: false }} />
       <Stack.Screen name="auth/signUpHealth" options={{ headerShown: false }} />
-      <Stack.Screen name="auth/login" options={{ headerShown: false }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
       {/* 모달 화면을 설정 */}

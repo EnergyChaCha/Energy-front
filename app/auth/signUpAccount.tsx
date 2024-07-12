@@ -23,25 +23,17 @@ const SignUpAccountScreen = () => {
     setForm({ ...form, [name]: value });
   };
 
-  const handleLogin = () => {
-    if (form.password !== form.confirmPassword) {
-      setErrorMessage("비밀번호가 일치하지 않습니다.");
-    } else {
-      setErrorMessage("");
-    }
-  };
-
   const navigation = useNavigation();
 
   const handleSignUp = () => {
-    if (form.password !== form.confirmPassword) {
-      Alert.alert("비밀번호가 일치하지 않습니다.");
-      return;
-    }
-    if (form.id == "" || form.password == "" || form.confirmPassword == "") {
-      Alert.alert("필수 항목을 모두 입력해주세요.");
-      return;
-    }
+    // if (form.password !== form.confirmPassword) {
+    //   Alert.alert("비밀번호가 일치하지 않습니다.");
+    //   return;
+    // }
+    // if (form.id == "" || form.password == "" || form.confirmPassword == "") {
+    //   Alert.alert("필수 항목을 모두 입력해주세요.");
+    //   return;
+    // }
     navigation.navigate("auth/signUpPersonal", { form });
   };
 

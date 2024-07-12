@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "@/constants/Colors";
-import CheckButton from "@/components/signup/CheckButton";
+import CheckButton from "@/components/CheckButton";
 
 const TermsOfServiceScreen = () => {
   const [agreement, setAgreement] = useState({
@@ -24,7 +24,7 @@ const TermsOfServiceScreen = () => {
   const navigation = useNavigation();
 
   const handleSignUp = () => {
-    navigation.navigate("auth/signUpHealth");
+    navigation.navigate("auth/signUpAccount");
   };
 
   return (
@@ -53,6 +53,7 @@ const TermsOfServiceScreen = () => {
             }}
           />
         </View>
+        <View style={styles.separator} />
 
         <View style={styles.agreementItem}>
           <Text style={styles.agreementText}>
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
     borderColor: "#e8e8e8",
     padding: 10,
     backgroundColor: Colors.background_gray,
-    marginBottom: 20
+    marginBottom: 20,
   },
   button: {
     backgroundColor: Colors.blue,
@@ -186,6 +187,8 @@ const styles = StyleSheet.create({
   agreementDetail: {
     fontSize: 12,
     color: Colors.gray,
+    fontFamily: "notoSans4",
+    lineHeight: 16,
     borderColor: Colors.background_gray,
   },
   required: {
@@ -195,6 +198,11 @@ const styles = StyleSheet.create({
     color: Colors.navy,
     fontSize: 16,
     fontFamily: "notoSans5",
+  },
+  separator: {
+    marginVertical: 10,
+    height: 1,
+    backgroundColor: "#e5e5e9",
   },
 });
 

@@ -34,6 +34,16 @@ const SignUpPersonalScreen = () => {
 
   const navigation = useNavigation();
   const handleSignUp = () => {
+    if (form.name == "" || form.phone == "" || form.birth == undefined || form.birth == "") {
+      Alert.alert("필수 항목을 모두 입력해주세요.");
+      return;
+    }
+
+    if ((form.birth + "").length != 8) {
+      Alert.alert("생년월일을 8자로 입력해주세요.");
+      return;
+    }
+
     navigation.navigate("auth/signUpWork");
   };
 
@@ -44,7 +54,7 @@ const SignUpPersonalScreen = () => {
         <CustomTextInput
           label="이름"
           value={form.name}
-          onChangeText={(value) => handleChange("id", value)}
+          onChangeText={(value) => handleChange("name", value)}
           placeholder="이름"
           inputType="input"
           required={true}

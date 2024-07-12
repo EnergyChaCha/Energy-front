@@ -1,21 +1,19 @@
-import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import React from "react";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { FontAwesome5, MaterialIcons, Octicons } from "@expo/vector-icons";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 
 import { Link, Tabs, useNavigation } from "expo-router";
-import { Pressable } from 'react-native';
+import { Pressable } from "react-native";
 
-import Colors from '@/constants/Colors';
-
+import Colors from "@/constants/Colors";
 
 function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
+  name: React.ComponentProps<typeof FontAwesome>["name"];
   color: string;
 }) {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
-
 
 export default function TabLayout() {
   const navigation = useNavigation();
@@ -24,10 +22,10 @@ export default function TabLayout() {
       screenOptions={{
         headerStyle: {},
         headerTitleStyle: {
-          fontWeight: "bold",
+          fontFamily: "notoSans7",
           fontSize: 18,
         },
-        headerTintColor: "#fff",
+        headerTintColor: Colors.navy,
         headerTitleAlign: "center",
         headerLeft: () => (
           <Pressable onPress={() => navigation.goBack()}>

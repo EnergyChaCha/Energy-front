@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
 import CustomTextInput from "@/components/CustomTextInput";
 import Colors from "@/constants/Colors";
 import { useNavigation } from "@react-navigation/native";
+import { hello, signIn } from "@/api/apiServices";
 
 const LoginScreen = () => {
   const [id, setId] = useState("");
@@ -11,14 +12,31 @@ const LoginScreen = () => {
 
   const navigation = useNavigation();
 
-  const handleLogin = () => {
-    // 여기에 로그인 로직을 구현합니다.
-    if (id !== "energy") {
-      setErrorMessage("아이디와 비밀번호가 올바르지 않습니다.");
-    } else {
+  const handleLogin = async () => {
+    try {
+      const res = await signIn(id, password);
+      // const res = await hello(); // get Test
+
+      // Alert.alert(res);
+      // localStorage.setItem("accessToken", res.accessToken);
+      // localStorage.setItem("userName", res.name);
       navigation.navigate("(tabs)");
+    } catch (error) {
+      console.log(error);
     }
   };
+
+  // const handleLogin = () => {
+  //   // 여기에 로그인 로직을 구현합니다.
+
+
+
+  //   if (id !== "energy") {
+  //     setErrorMessage("아이디와 비밀번호가 올바르지 않습니다.");
+  //   } else {
+  //     navigation.navigate("(tabs)");
+  //   }
+  // };
 
   return (
     <View style={styles.container}>

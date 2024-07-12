@@ -9,13 +9,13 @@ interface CheckButtonProps {
   onPress: () => void;
 }
 
-function CheckButton({ checked, size, onPress }: CheckButtonProps) {
+function SearchForm({ checked, size, onPress }: CheckButtonProps) {
   return (
     <TouchableOpacity onPress={onPress}>
       <FontAwesome5
         name="check-circle"
         size={size}
-        color={checked ? Colors.blue : Colors.gray} // checked가 true이면 색을 파란색으로 설정
+        color={checked ? Colors.blue : Colors.gray}
       />
     </TouchableOpacity>
   );
