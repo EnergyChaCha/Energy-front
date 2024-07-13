@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Animated,
+  Alert,
 } from "react-native";
 import { Calendar, DateData } from "react-native-calendars";
 import moment from "moment";
@@ -18,8 +19,8 @@ interface DateRangePickerProps {
 const DateRangePicker: React.FC<DateRangePickerProps> = ({
   onDateRangeSelected,
 }) => {
-  const [startDate, setStartDate] = useState<string | null>(null);
-  const [endDate, setEndDate] = useState<string | null>(null);
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [selectBtn, setSelectBtn] = useState<number | null>(null);
 
@@ -27,18 +28,17 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
     setSelectBtn(null);
     if (!startDate || (startDate && endDate)) {
       setStartDate(day.dateString);
-      setEndDate(null);
+      setEndDate("");
     } else if (moment(day.dateString).isAfter(startDate)) {
       setEndDate(day.dateString);
     } else {
       setStartDate(day.dateString);
-      setEndDate(null);
+      setEndDate("");
     }
   };
 
   const getMarkedDates = () => {
     const marked: any = {};
-    console.log(startDate, endDate);
 
     if (startDate) {
       marked[startDate] = {
@@ -100,12 +100,23 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
     setSelectBtn(buttonIndex);
   };
 
+  const handleConfirm = () => {
+    if (startDate == "") {
+      onDateRangeSelected("", "");
+      return;
+    }
+    if (startDate) {
+      onDateRangeSelected(startDate, endDate);
+      setShowCalendar(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.titleText}>기간 설정</Text>
       <Text style={styles.dateText}>
         {startDate}
-        {endDate && endDate !== startDate && ` - ${endDate}`}
+        {endDate && endDate !== startDate && ` ~ ${endDate}`}
       </Text>
 
       <View style={styles.dayBtnList}>
@@ -166,7 +177,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
           styles.button,
           { backgroundColor: startDate ? Colors.blue : Colors.background_gray },
         ]}
-        onPress={() => console.log()}
+        onPress={handleConfirm}
       >
         <Text
           style={[
@@ -176,7 +187,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
             },
           ]}
         >
-          검색
+          {startDate ? "검색" : "닫기"}
         </Text>
       </TouchableOpacity>
     </View>
@@ -185,9 +196,10 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    backgroundColor: "white",
+    borderRadius: 10,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
   },
   titleText: {
     fontFamily: "notoSans5",
@@ -204,7 +216,8 @@ const styles = StyleSheet.create({
   },
   button: {
     // backgroundColor: {startDate?},
-    padding: 5,
+    paddingHorizontal: 20,
+    paddingVertical: 5,
     width: "50%",
     alignSelf: "center",
     margin: 10,

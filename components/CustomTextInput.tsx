@@ -18,6 +18,7 @@ interface CustomTextInputProps {
     | "phone-pad";
   required?: boolean;
   inputType: "input" | "label" | "dropdown" | "number";
+  bottomLine?: boolean;
   options?: { label: string; value: string }[];
 }
 
@@ -30,20 +31,20 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
   keyboardType = "default",
   required = false,
   inputType,
+  bottomLine = true,
   options = [],
 }) => {
-
-    const handleNumberChange = (text: string) => {
-      const numericValue = text.replace(/[^0-9]/g, "");
-      onChangeText(numericValue);
-    };
+  const handleNumberChange = (text: string) => {
+    const numericValue = text.replace(/[^0-9]/g, "");
+    onChangeText(numericValue);
+  };
 
   const renderInput = () => {
     switch (inputType) {
       case "input":
         return (
           <TextInput
-            style={styles.input}
+            style={[styles.input, bottomLine ? styles.bottomBorder : null]}
             value={value}
             onChangeText={onChangeText}
             placeholder={placeholder}
@@ -55,7 +56,7 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
       case "number":
         return (
           <TextInput
-            style={styles.input}
+            style={[styles.input, bottomLine ? styles.bottomBorder : null]}
             value={value}
             onChangeText={handleNumberChange}
             placeholder={placeholder}
@@ -67,7 +68,7 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
         return <Text style={styles.labelValue}>{value}</Text>;
       case "dropdown":
         return (
-          <View style={styles.pickerContainer}>
+          <View style={bottomLine ? styles.bottomBorder : null}>
             <Picker
               selectedValue={value}
               onValueChange={(itemValue) => onChangeText(itemValue)}
@@ -122,8 +123,6 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     paddingHorizontal: 0,
     fontFamily: "notoSans4",
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.divider,
     color: Colors.navy,
   },
   labelValue: {
@@ -132,14 +131,14 @@ const styles = StyleSheet.create({
     fontFamily: "notoSans4",
     color: Colors.navy,
   },
-  pickerContainer: {
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.divider,
-  },
   picker: {
     width: "100%",
     color: Colors.navy,
     fontFamily: "notoSans6",
+  },
+  bottomBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.divider,
   },
 });
 

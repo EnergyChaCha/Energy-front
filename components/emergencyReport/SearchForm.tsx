@@ -29,6 +29,7 @@ function SearchForm() {
         <CustomTextInput
           inputType="dropdown"
           label=""
+          bottomLine={false}
           value={searchType}
           options={searchOptions}
           onChangeText={setSearchType}
