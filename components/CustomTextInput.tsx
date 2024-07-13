@@ -6,7 +6,7 @@ import Colors from "@/constants/Colors";
 interface CustomTextInputProps {
   label: string;
   value: string | undefined;
-  onChangeText: (text: string) => void;
+  onChangeText?: (text: string) => void;
   placeholder?: string;
   secureTextEntry?: boolean;
   keyboardType?:
@@ -36,7 +36,7 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
 }) => {
   const handleNumberChange = (text: string) => {
     const numericValue = text.replace(/[^0-9]/g, "");
-    onChangeText(numericValue);
+    onChangeText!(numericValue);
   };
 
   const renderInput = () => {
@@ -65,13 +65,19 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
           />
         );
       case "label":
-        return <Text style={styles.labelValue}>{value}</Text>;
+        return (
+          <Text
+            style={[styles.labelValue, bottomLine ? styles.bottomBorder : null]}
+          >
+            {value}
+          </Text>
+        );
       case "dropdown":
         return (
           <View style={bottomLine ? styles.bottomBorder : null}>
             <Picker
               selectedValue={value}
-              onValueChange={(itemValue) => onChangeText(itemValue)}
+              onValueChange={(itemValue) => onChangeText!(itemValue)}
               style={styles.picker}
             >
               {options.map((option) => (
@@ -109,9 +115,10 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
+    lineHeight: 30,
     color: Colors.navy,
     fontFamily: "notoSans6",
-    marginBottom: 5,
+    marginBottom: 10,
   },
   requiredStar: {
     color: Colors.red,
@@ -120,13 +127,14 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 14,
-    lineHeight: 14,
+    lineHeight: 30,
     paddingHorizontal: 0,
     fontFamily: "notoSans4",
     color: Colors.navy,
   },
   labelValue: {
     fontSize: 14,
+    lineHeight: 30,
     paddingHorizontal: 0,
     fontFamily: "notoSans4",
     color: Colors.navy,

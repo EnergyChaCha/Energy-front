@@ -7,11 +7,13 @@ import SearchForm from "@/components/emergencyReport/SearchForm";
 import DateRangePicker from "@/components/DateRangePicker";
 import moment from "moment";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import ReportDetail from "@/components/emergencyReport/ReportDetail";
 
 export default function EmergencyReport() {
   const [searchInput, setSearchInput] = useState("");
   const [searchType, setSearchType] = useState("");
-  const [showModal, setShowModal] = useState(false);
+  const [showDateModal, setShowDateModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
 
   const [date, setDate] = useState<{
     startDate: string | null;
@@ -23,13 +25,13 @@ export default function EmergencyReport() {
 
   const handleDateRangeSelected = (startDate: string, endDate: string) => {
     if (startDate == "" && endDate ==""){
-      setShowModal(false);
+      setShowDateModal(false);
     }else{
       setDate({
         startDate: startDate,
         endDate: endDate,
       });
-      setShowModal(false);
+      setShowDateModal(false);
     }
   };
 
@@ -48,7 +50,7 @@ export default function EmergencyReport() {
         </Text>
         <TouchableOpacity
           style={styles.dateIcon}
-          onPress={() => setShowModal(true)}
+          onPress={() => setShowDateModal(true)}
         >
           <Text style={styles.dateText}>기간 설정 &nbsp;</Text>
           <MaterialCommunityIcons
@@ -58,19 +60,36 @@ export default function EmergencyReport() {
           />
         </TouchableOpacity>
       </View>
+      <TouchableOpacity
+        style={styles.dateIcon}
+        onPress={() => setShowReportModal(true)}
+      >
+        <Text>상세보기</Text>
+      </TouchableOpacity>
+
       <Modal
-        visible={showModal}
+        visible={showDateModal}
         animationType="fade"
         transparent={true}
-        onRequestClose={() => setShowModal(false)}
+        onRequestClose={() => setShowDateModal(false)}
       >
         <View style={styles.modalContainer}>
           <DateRangePicker onDateRangeSelected={handleDateRangeSelected} />
         </View>
       </Modal>
 
-
-      
+      <Modal
+        visible={showReportModal}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setShowReportModal(false)}
+      >
+        <View style={styles.modalContainer}>
+          <ReportDetail
+            modalClose={() => setShowReportModal(false)}
+          />
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -79,9 +98,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    padding: 10,
     alignSelf: "center",
-    width: "90%",
+    width: "100%",
   },
   title: {
     fontSize: 20,
