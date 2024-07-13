@@ -50,31 +50,6 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
-        options={{
-          title: "Tab One",
-          tabBarIcon: ({ focused }) => (
-            <TabBarIcon
-              name="code"
-              color={focused ? Colors.blue : Colors.navy}
-            />
-          ),
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="EmergencyReport"
         options={{
           title: "신고이력",
