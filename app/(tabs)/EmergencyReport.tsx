@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { Modal, StyleSheet, TouchableOpacity } from "react-native";
 
-import { Text, View } from "react-native";
+import { Text, View, ScrollView } from "react-native";
 import Colors from "@/constants/Colors";
 import SearchForm from "@/components/emergencyReport/SearchForm";
 import DateRangePicker from "@/components/DateRangePicker";
 import moment from "moment";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ReportDetail from "@/components/emergencyReport/ReportDetail";
+import TimeDivider from "@/components/emergencyReport/TimeDivider";
+import ReportItem from "@/components/emergencyReport/ReportItem";
 
 export default function EmergencyReport() {
   const [searchInput, setSearchInput] = useState("");
@@ -24,9 +26,9 @@ export default function EmergencyReport() {
   });
 
   const handleDateRangeSelected = (startDate: string, endDate: string) => {
-    if (startDate == "" && endDate ==""){
+    if (startDate == "" && endDate == "") {
       setShowDateModal(false);
-    }else{
+    } else {
       setDate({
         startDate: startDate,
         endDate: endDate,
@@ -60,12 +62,14 @@ export default function EmergencyReport() {
           />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        style={styles.dateIcon}
-        onPress={() => setShowReportModal(true)}
-      >
-        <Text>상세보기</Text>
-      </TouchableOpacity>
+
+      <ScrollView style={styles.scrollView}>
+        <TimeDivider date="2024-07-14" />
+        <ReportItem time="14:00" list="" />
+
+        <TimeDivider date="2024-07-15" />
+        <ReportItem time="12:00" list="" />
+      </ScrollView>
 
       <Modal
         visible={showDateModal}
@@ -78,18 +82,7 @@ export default function EmergencyReport() {
         </View>
       </Modal>
 
-      <Modal
-        visible={showReportModal}
-        animationType="fade"
-        transparent={true}
-        onRequestClose={() => setShowReportModal(false)}
-      >
-        <View style={styles.modalContainer}>
-          <ReportDetail
-            modalClose={() => setShowReportModal(false)}
-          />
-        </View>
-      </Modal>
+
     </View>
   );
 }
@@ -142,5 +135,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 30,
     backgroundColor: Colors.modal_background,
+  },
+
+  scrollView:{
+    width: "100%",
   },
 });
