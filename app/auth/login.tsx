@@ -20,17 +20,20 @@ const LoginScreen = () => {
       // Alert.alert(res);
       // localStorage.setItem("accessToken", res.accessToken);
       // localStorage.setItem("userName", res.name);
+      
       navigation.navigate("(tabs)");
     } catch (error) {
+      setErrorMessage("아이디와 비밀번호가 올바르지 않습니다.");
       console.log(error);
     }
   };
+  const signUpClick = () =>{
+    navigation.navigate("auth/termsOfService");
+  };
+
 
   // const handleLogin = () => {
-  //   // 여기에 로그인 로직을 구현합니다.
-
-
-
+  
   //   if (id !== "energy") {
   //     setErrorMessage("아이디와 비밀번호가 올바르지 않습니다.");
   //   } else {
@@ -71,7 +74,7 @@ const LoginScreen = () => {
         <Text style={styles.signupButtonText}>바이오인증</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.signupButton}>
+      <TouchableOpacity style={styles.signupButton} onPress={signUpClick}>
         <Text style={styles.signupButtonText}>회원가입</Text>
       </TouchableOpacity>
     </View>

@@ -58,7 +58,6 @@ function RootLayoutNav() {
     <Stack initialRouteName="auth/login">
       <Stack.Screen name="auth/login" options={{ headerShown: false }} />
 
-      
       <Stack.Screen
         name="auth/termsOfService"
         options={{ headerShown: false }}

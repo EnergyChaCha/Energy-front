@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "@/constants/Colors";
-import CheckButton from "@/components/CheckButton";
+import IconButton from "@/components/IconButton";
 
 const TermsOfServiceScreen = () => {
   const [agreement, setAgreement] = useState({
@@ -36,9 +36,10 @@ const TermsOfServiceScreen = () => {
             이용약관, 개인정보 수집 및 이용{"\n"}위치정보 이용약관에 모두
             동의합니다.
           </Text>
-          <CheckButton
+          <IconButton
             checked={agreement.terms && agreement.privacy && agreement.location}
             size={35}
+            icon="check-circle"
             onPress={() => {
               const newValue = !(
                 agreement.terms &&
@@ -60,9 +61,10 @@ const TermsOfServiceScreen = () => {
             이용약관에 동의 &nbsp;
             <Text style={styles.required}>(필수)</Text>
           </Text>
-          <CheckButton
+          <IconButton
             checked={agreement.terms}
             size={24}
+            icon="check-circle"
             onPress={() => handleChange("terms", !agreement.terms)}
           />
         </View>
@@ -85,9 +87,10 @@ const TermsOfServiceScreen = () => {
             개인정보 수집 및 이용에 대한 안내 &nbsp;
             <Text style={styles.required}>(필수)</Text>
           </Text>
-          <CheckButton
+          <IconButton
             checked={agreement.privacy}
             size={24}
+            icon="check-circle"
             onPress={() => handleChange("privacy", !agreement.privacy)}
           />
         </View>
@@ -110,9 +113,10 @@ const TermsOfServiceScreen = () => {
             위치 정보 수집에 대한 안내 &nbsp;
             <Text style={styles.required}>(필수)</Text>
           </Text>
-          <CheckButton
+          <IconButton
             checked={agreement.location}
             size={24}
+            icon="check-circle"
             onPress={() => handleChange("location", !agreement.location)}
           />
         </View>

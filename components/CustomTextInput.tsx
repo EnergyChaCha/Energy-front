@@ -34,7 +34,6 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
 }) => {
 
     const handleNumberChange = (text: string) => {
-      
       const numericValue = text.replace(/[^0-9]/g, "");
       onChangeText(numericValue);
     };
@@ -91,10 +90,12 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>
-        {label} &nbsp;
-        {required && <Text style={styles.requiredStar}>*</Text>}
-      </Text>
+      {label != "" && (
+        <Text style={styles.label}>
+          {label} &nbsp;
+          {required && <Text style={styles.requiredStar}>*</Text>}
+        </Text>
+      )}
       {renderInput()}
     </View>
   );
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 14,
-    lineHeight:14,
+    lineHeight: 14,
     paddingHorizontal: 0,
     fontFamily: "notoSans4",
     borderBottomWidth: 1,
@@ -138,6 +139,7 @@ const styles = StyleSheet.create({
   picker: {
     width: "100%",
     color: Colors.navy,
+    fontFamily: "notoSans6",
   },
 });
 
