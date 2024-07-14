@@ -1,40 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
-import CustomTextInput from "../CustomTextInput";
+import CustomTextInput from "./CustomTextInput";
 import { AntDesign } from "@expo/vector-icons";
 
-interface CheckButtonProps {
-  checked: boolean;
-  size: number;
-  onPress: () => void;
+interface SearchFormProps {
+  searchClick: (text: string, type?: string) => void;
+  searchOptions?: { label: string; value: string }[];
 }
 
-// function SearchForm({ checked, size, onPress }: CheckButtonProps) {
-function SearchForm() {
-  const [searchInput, setSearchInput] = useState("");
-  const [searchType, setSearchType] = useState("");
-  const searchOptions = [
-    // { label: "선택", value: "" },
-    { label: "환자", value: "patient" },
-    { label: "접수자", value: "reporter" },
-  ];
+function SearchForm({ searchClick, searchOptions }: SearchFormProps) {
+  const [searchInput, setSearchInput] = useState<string>("");
+  const [searchType, setSearchType] = useState<string>("");
 
-  const searchBtnClick = () => {};
+  useEffect(() => {
+    if (searchOptions && searchOptions.length > 0) {
+      setSearchType(searchOptions[0].value);
+    }
+  }, [searchOptions]);
+
+  const searchBtnClick = () => {
+    if (searchInput.trim()) {
+      searchClick(searchInput, searchType);
+    }
+  };
 
   return (
     <View style={styles.view}>
-      <View style={styles.searchType}>
-        <CustomTextInput
-          inputType="dropdown"
-          label=""
-          bottomLine={false}
-          value={searchType}
-          options={searchOptions}
-          onChangeText={setSearchType}
-        />
-      </View>
+      {searchOptions && (
+        <View style={styles.searchType}>
+          <CustomTextInput
+            inputType="dropdown"
+            label=""
+            bottomLine={false}
+            value={searchType}
+            options={searchOptions}
+            onChangeText={setSearchType}
+          />
+        </View>
+      )}
 
       <TextInput
         style={styles.input}
@@ -72,7 +77,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   input: {
-    width: "50%",
+    flex: 1,
+    paddingHorizontal:10
   },
 });
 

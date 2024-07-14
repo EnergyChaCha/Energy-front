@@ -11,73 +11,69 @@ import { useNavigation } from "@react-navigation/native";
 import Colors from "@/constants/Colors";
 import CustomTextInput from "@/components/CustomTextInput";
 
-const ReportDetailPatient = () => {
-  const [form, setForm] = useState({
-    // createdTime: ""
-    // id: "",
-    // loginId: "",
-    // name: "",
-    // gender: 0,
-    // phone: "",
-    // workArea: "",
-    // department: "",
-    // gps: "",
-    // status: "",
-    // address: "",
-    // healthInfo: {
-    //   emergencyNumber: "",
-    //   emergencyRelationship: "",
-    //   disease: "",
-    //   allergy: "",
-    //   medication: "",
-    //   blood: "",
-    //   organDonor: 0,
-    createdTime: "2023-07-01T10:30:00Z",
-    id: "target_uuid_1",
-    loginId: "chacha123",
-    name: "정으니",
-    gender: 0,
-    phone: "010-1234-1234",
-    workArea: "근무지",
-    department: "직무(상차)",
-    gps: "gps 정보",
-    status: "의식 없음",
-    address: "주소",
-    healthInfo: {
-      emergencyNumber: "응급연락처",
-      emergencyRelationship: "응급연락처관계",
-      disease: "기저질환",
-      allergy: "알레르기",
-      medication: "복용중인 약",
-      blood: "혈액형",
-      organDonor: 0,
-    },
-  });
 
+interface HealthInfo {
+  emergencyNumber: string;
+  emergencyRelationship: string;
+  disease: string;
+  allergy: string;
+  medication: string;
+  blood: string;
+  organDonor: number;
+  bpm: string;
+}
+
+interface Patient {
+  id: string;
+  loginId: string;
+  name: string;
+  gender: number;
+  phone: string;
+  workArea: string;
+  department: string;
+  gps: string;
+  status: string;
+  address: string;
+  healthInfo: HealthInfo;
+}
+
+interface ReportDetailPatientProps {
+  patientData: Patient;
+  createdTime:string;
+}
+
+const ReportDetailPatient: React.FC<ReportDetailPatientProps> = ({
+  patientData,
+  createdTime,
+}) => {
   return (
     <ScrollView style={styles.container}>
       <CustomTextInput
         label="장소 (GPS 좌표)"
-        value={form.gps}
+        value={patientData.gps}
         inputType="label"
       />
-      <CustomTextInput label="신고시 BPM" value={form.gps} inputType="label" />
       <CustomTextInput
-        label="날짜"
-        value={form.createdTime}
+        label="신고시 BPM"
+        value={patientData.status}
         inputType="label"
       />
+      <CustomTextInput label="날짜" value={createdTime} inputType="label" />
       <Text style={styles.subTitle}>회원정보</Text>
       <View style={styles.labelWrapper}>
         <View style={styles.labelSize}>
           <CustomTextInput
             label="아이디"
-            value={form.loginId}
+            value={patientData.loginId}
             inputType="label"
           />
         </View>
         <View style={styles.labelSize}>
-          <CustomTextInput label="이름" value={form.name} inputType="label" />
+          <CustomTextInput
+            label="이름"
+            value={patientData.name}
+            inputType="label"
+          />
         </View>
       </View>
 
@@ -85,14 +81,14 @@ const ReportDetailPatient = () => {
         <View style={styles.labelSize}>
           <CustomTextInput
             label="성별"
-            value={form.gender == 0 ? "여자" : "남자"}
+            value={patientData.gender == 0 ? "여자" : "남자"}
             inputType="label"
           />
         </View>
         <View style={styles.labelSize}>
           <CustomTextInput
             label="전화번호"
-            value={form.phone}
+            value={patientData.phone}
             inputType="label"
           />
         </View>
@@ -102,14 +98,14 @@ const ReportDetailPatient = () => {
         <View style={styles.labelSize}>
           <CustomTextInput
             label="근무지"
-            value={form.workArea}
+            value={patientData.workArea}
             inputType="label"
           />
         </View>
         <View style={styles.labelSize}>
           <CustomTextInput
             label="직무"
-            value={form.department}
+            value={patientData.department}
             inputType="label"
           />
         </View>
@@ -121,14 +117,14 @@ const ReportDetailPatient = () => {
         <View style={styles.labelSize}>
           <CustomTextInput
             label="비상 연락처"
-            value={form.healthInfo.emergencyNumber}
+            value={patientData.healthInfo.emergencyNumber}
             inputType="label"
           />
         </View>
         <View style={styles.labelSize}>
           <CustomTextInput
             label="비상 연락처 관계"
-            value={form.healthInfo.emergencyRelationship}
+            value={patientData.healthInfo.emergencyRelationship}
             inputType="label"
           />
         </View>
@@ -138,14 +134,14 @@ const ReportDetailPatient = () => {
         <View style={styles.labelSize}>
           <CustomTextInput
             label="혈액형"
-            value={form.healthInfo.blood}
+            value={patientData.healthInfo.blood}
             inputType="label"
           />
         </View>
         <View style={styles.labelSize}>
           <CustomTextInput
             label="장기기증자"
-            value={form.healthInfo.organDonor == 0 ? "예" : "아니오"}
+            value={patientData.healthInfo.organDonor == 0 ? "예" : "아니오"}
             inputType="label"
           />
         </View>
@@ -153,17 +149,17 @@ const ReportDetailPatient = () => {
 
       <CustomTextInput
         label="기저질환"
-        value={form.healthInfo.disease}
+        value={patientData.healthInfo.disease}
         inputType="label"
       />
       <CustomTextInput
         label="알레르기"
-        value={form.healthInfo.allergy}
+        value={patientData.healthInfo.allergy}
         inputType="label"
       />
       <CustomTextInput
         label="복용중인 약"
-        value={form.healthInfo.medication}
+        value={patientData.healthInfo.medication}
         inputType="label"
       />
     </ScrollView>

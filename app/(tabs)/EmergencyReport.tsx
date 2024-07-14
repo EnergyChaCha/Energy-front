@@ -1,88 +1,165 @@
-import React, { useState } from "react";
-import { Modal, StyleSheet, TouchableOpacity } from "react-native";
-
-import { Text, View, ScrollView } from "react-native";
+import React, { useMemo, useState } from "react";
+import { Modal, StyleSheet } from "react-native";
+import { View, ScrollView } from "react-native";
 import Colors from "@/constants/Colors";
-import SearchForm from "@/components/emergencyReport/SearchForm";
-import DateRangePicker from "@/components/DateRangePicker";
-import moment from "moment";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import ReportDetail from "@/components/emergencyReport/ReportDetail";
+import SearchForm from "@/components/SearchForm";
 import TimeDivider from "@/components/emergencyReport/TimeDivider";
 import ReportItem from "@/components/emergencyReport/ReportItem";
+import DateSet from "@/components/emergencyReport/DateSet";
+
+const JsonData = [
+  {
+    id: "report_uuid_1",
+    gps: "위도, 경도",
+    createdTime: "2024-06-20T15:15:22",
+    checked: "확인한 관리자 id 1",
+    patient: {
+      id: "target_uuid_1",
+      loginId: "log**",
+      name: "김*차",
+      phone: "010-****-1234",
+    },
+    reporter: {
+      id: "reporter_uuid_2",
+      loginId: "log**",
+      name: "홍*동",
+      phone: "010-****-1234",
+    },
+  },
+  {
+    id: "report_uuid_2",
+    gps: "위도, 경도",
+    createdTime: "2024-06-20T15:25:22",
+    checked: "확인한 관리자 id 2",
+    patient: {
+      id: "target_uuid_1",
+      loginId: "log**",
+      name: "홍*동",
+      phone: "010-****-1234",
+    },
+    reporter: {
+      id: "reporter_uuid_1",
+      loginId: "log**",
+      name: "강*날",
+      phone: "010-****-1234",
+    },
+  },
+  {
+    id: "report_uuid_3",
+    gps: "위도, 경도",
+    createdTime: "2024-06-21T12:10:22",
+    checked: "확인한 관리자 id",
+    patient: {
+      id: "target_uuid_1",
+      loginId: "log**",
+      name: "홍*동",
+      phone: "010-****-1234",
+    },
+    reporter: {
+      id: "reporter_uuid_1",
+      loginId: "log**",
+      name: "홍*동",
+      phone: "010-****-1234",
+    },
+  },
+];
+
+interface Patient {
+  id: string;
+  loginId: string;
+  name: string;
+  phone: string;
+}
+
+interface Reporter {
+  id: string;
+  loginId: string;
+  name: string;
+  phone: string;
+}
+
+interface ReportData {
+  id: string;
+  gps: string;
+  createdTime: string;
+  checked: string;
+  patient: Patient;
+  reporter: Reporter;
+}
+
+interface GroupedData {
+  [date: string]: {
+    [time: string]: ReportData[];
+  };
+}
+
+const groupDataByDateAndHour = (data: ReportData[]): GroupedData => {
+  console.log(data);
+  
+  const sortedData = data.sort(
+    (a, b) =>
+      new Date(a.createdTime).getTime() - new Date(b.createdTime).getTime()
+  );
+
+  return sortedData.reduce((acc: GroupedData, item) => {
+    const date = new Date(item.createdTime);
+    const dateString = date.toISOString().split("T")[0];
+    const hour = date.getHours().toString().padStart(2, "0");
+
+    if (!acc[dateString]) {
+      acc[dateString] = {};
+    }
+
+    if (!acc[dateString][hour]) {
+      acc[dateString][hour] = [];
+    }
+
+    acc[dateString][hour].push(item);
+    console.log(acc);
+    
+    return acc;
+  }, {});
+};
 
 export default function EmergencyReport() {
-  const [searchInput, setSearchInput] = useState("");
-  const [searchType, setSearchType] = useState("");
-  const [showDateModal, setShowDateModal] = useState(false);
-  const [showReportModal, setShowReportModal] = useState(false);
+  const [data, setData] = useState(JsonData);
+  const groupedData = useMemo(() => groupDataByDateAndHour(data), [data]);
 
-  const [date, setDate] = useState<{
-    startDate: string | null;
-    endDate: string | null;
-  }>({
-    startDate: moment().startOf("day").format("YYYY-MM-DD"),
-    endDate: null,
-  });
+  const handleDate = (startDate: string | null, endDate: string | null) => {
+    console.log("startDate : ", startDate);
+    console.log("endDate : ", endDate);
+  };
 
-  const handleDateRangeSelected = (startDate: string, endDate: string) => {
-    if (startDate == "" && endDate == "") {
-      setShowDateModal(false);
-    } else {
-      setDate({
-        startDate: startDate,
-        endDate: endDate,
-      });
-      setShowDateModal(false);
-    }
+  const handleSearchClick = (input: string, typeValue?: string) => {
+    console.log("Search Text:", input);
+    console.log("Search typeValue:", typeValue);
   };
 
   return (
     <View style={styles.container}>
-      <SearchForm />
-      <View style={styles.dateWrapper}>
-        <Text style={styles.dateText}>
-          기간 &nbsp;
-          <Text style={{ color: Colors.blue }}>
-            {date.startDate}
-            {date.endDate &&
-              date.endDate !== date.startDate &&
-              ` ~ ${date.endDate}`}
-          </Text>
-        </Text>
-        <TouchableOpacity
-          style={styles.dateIcon}
-          onPress={() => setShowDateModal(true)}
-        >
-          <Text style={styles.dateText}>기간 설정 &nbsp;</Text>
-          <MaterialCommunityIcons
-            name="calendar-month"
-            size={25}
-            color={Colors.navy}
-          />
-        </TouchableOpacity>
-      </View>
+      <SearchForm
+        searchClick={handleSearchClick}
+        searchOptions={[
+          { label: "환자", value: "patient" },
+          { label: "접수자", value: "reporter" },
+        ]}
+      />
+      <DateSet handleDate={handleDate} />
 
       <ScrollView style={styles.scrollView}>
-        <TimeDivider date="2024-07-14" />
-        <ReportItem time="14:00" list="" />
-
-        <TimeDivider date="2024-07-15" />
-        <ReportItem time="12:00" list="" />
+        {Object.entries(groupedData).map(([date, hourGroups]) => (
+          <React.Fragment key={date}>
+            <TimeDivider date={date} />
+            {Object.entries(hourGroups).map(([hour, items]) => (
+              <ReportItem
+                key={`${date}-${hour}`}
+                time={`${hour}:00`}
+                list={items}
+              />
+            ))}
+          </React.Fragment>
+        ))}
       </ScrollView>
-
-      <Modal
-        visible={showDateModal}
-        animationType="fade"
-        transparent={true}
-        onRequestClose={() => setShowDateModal(false)}
-      >
-        <View style={styles.modalContainer}>
-          <DateRangePicker onDateRangeSelected={handleDateRangeSelected} />
-        </View>
-      </Modal>
-
-
     </View>
   );
 }
@@ -95,49 +172,8 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: "100%",
   },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 5,
-    height: 1,
-    backgroundColor: Colors.divider,
-    width: "100%",
-  },
-  dateWrapper: {
-    width: "100%",
-    height: 50,
-    display: "flex",
-    flexDirection: "row",
-    alignContent: "center",
-    justifyContent: "space-between",
 
-    paddingVertical: 10,
-    paddingHorizontal: 5,
-  },
-
-  dateText: {
-    fontFamily: "notoSans5",
-    fontSize: 15,
-    lineHeight: 20,
-    color: Colors.navy,
-    alignSelf: "center",
-  },
-  dateIcon: {
-    display: "flex",
-    flexDirection: "row",
-    alignSelf: "center",
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 30,
-    backgroundColor: Colors.modal_background,
-  },
-
-  scrollView:{
+  scrollView: {
     width: "100%",
   },
 });

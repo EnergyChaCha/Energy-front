@@ -5,16 +5,9 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 
-
 export {
-  // Layout 컴포넌트에서 발생하는 오류를 잡기 위한 ErrorBoundary를 내보냄
   ErrorBoundary,
 } from "expo-router";
-
-export const unstable_settings = {
-  // `/modal` 경로에서 리로드할 때 뒤로 가기 버튼이 표시되도록 설정
-  initialRouteName: "signup",
-};
 
 // 에셋 로딩이 완료되기 전에 스플래시 스크린이 자동으로 숨겨지지 않도록 방지
 SplashScreen.preventAutoHideAsync();
@@ -41,6 +34,7 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
+      
     }
   }, [loaded]);
 
@@ -55,7 +49,7 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
-    <Stack initialRouteName="auth/login">
+    <Stack initialRouteName="(tabs)">
       <Stack.Screen name="auth/login" options={{ headerShown: false }} />
 
       <Stack.Screen
@@ -73,9 +67,6 @@ function RootLayoutNav() {
       <Stack.Screen name="auth/signUpWork" options={{ headerShown: false }} />
       <Stack.Screen name="auth/signUpHealth" options={{ headerShown: false }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-
-      {/* 모달 화면을 설정 */}
-      <Stack.Screen name="modal" options={{ presentation: "modal" }} />
     </Stack>
   );
 }

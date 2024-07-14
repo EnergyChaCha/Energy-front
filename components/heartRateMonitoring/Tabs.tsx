@@ -9,16 +9,15 @@ import {
 } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import Colors from "@/constants/Colors";
-import ReportDetailPatient from "./ReportDetailPatient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import ReportDetailReporter from "./ReportDetailReporter";
 
-const JsonDate = {
-  id: "report_uuid_1",
-  gps: "위도, 경도",
-  createdTime: "2024-06-20T10:22:22",
-  checked: "확인한 관리자 id",
-  patient: {
+interface DateRangePickerProps {
+  modalClose: () => void;
+}
+
+const ReportDetail: React.FC<DateRangePickerProps> = ({ modalClose }) => {
+  const [form, setForm] = useState({
+    createdTime: "2023-07-01T10:30:00Z",
     id: "target_uuid_1",
     loginId: "chacha123",
     name: "정으니",
@@ -37,66 +36,8 @@ const JsonDate = {
       medication: "복용중인 약",
       blood: "혈액형",
       organDonor: 0,
-      bpm: "",
     },
-  },
-  reporter: {
-    id: "reporter_uuid_1",
-    loginId: "chacha123",
-    name: "정으니",
-    gender: 0,
-    phone: "010-1234-1234",
-    department: "직무(상차)",
-    workArea: "근무지",
-  },
-};
-
-interface HealthInfo {
-  emergencyNumber: string;
-  emergencyRelationship: string;
-  disease: string;
-  allergy: string;
-  medication: string;
-  blood: string;
-  organDonor: number;
-  bpm: string;
-}
-
-interface Patient {
-  id: string;
-  loginId: string;
-  name: string;
-  gender: number;
-  phone: string;
-  workArea: string;
-  department: string;
-  gps: string;
-  status: string;
-  address: string;
-  healthInfo: HealthInfo;
-}
-
-interface Reporter {
-  id: string;
-  loginId: string;
-  name: string;
-  gender: number;
-  phone: string;
-  department: string;
-  workArea: string;
-}
-
-
-interface DateRangePickerProps {
-  modalClose: () => void;
-  reportDataId: string;
-}
-
-const ReportDetail: React.FC<DateRangePickerProps> = ({
-  modalClose,
-  reportDataId,
-}) => {
-  const [data, setData] = useState(JsonDate);
+  });
 
   const layout = useWindowDimensions();
 
@@ -106,16 +47,10 @@ const ReportDetail: React.FC<DateRangePickerProps> = ({
     { key: "reporter", title: "접수자" },
   ]);
 
-  const renderScene = ({ route }: { route: { key: string } }) => {
-    switch (route.key) {
-      case "patient":
-        return <ReportDetailPatient patientData={data.patient} createdTime={data.createdTime}/>;
-      case "reporter":
-        return <ReportDetailReporter reporterData={data.reporter} />;
-      default:
-        return null;
-    }
-  };
+  const renderScene = SceneMap({
+    patient: ReportDetailPatient,
+    reporter: ReportDetailReporter,
+  });
 
   const renderTabBar = (props: any) => (
     <TabBar
@@ -184,9 +119,9 @@ const styles = StyleSheet.create({
   label: {
     color: Colors.navy,
     margin: 0,
-    fontFamily:"notoSans6",
-    fontSize:15,
-    lineHeight:20
+    fontFamily: "notoSans6",
+    fontSize: 15,
+    lineHeight: 20,
   },
   closeButton: {
     position: "absolute",
