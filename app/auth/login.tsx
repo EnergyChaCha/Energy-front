@@ -21,14 +21,14 @@ const LoginScreen = () => {
       // localStorage.setItem("accessToken", res.accessToken);
       // localStorage.setItem("userName", res.name);
       
-      navigation.navigate("(tabs)");
+      (navigation as any).navigate("(tabs)");
     } catch (error) {
       setErrorMessage("아이디와 비밀번호가 올바르지 않습니다.");
       console.log(error);
     }
   };
   const signUpClick = () =>{
-    navigation.navigate("auth/termsOfService");
+    (navigation as any).navigate("auth/termsOfService");
   };
 
 

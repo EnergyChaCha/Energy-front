@@ -20,7 +20,7 @@ export default function TabLayout() {
         headerTintColor: Colors.navy,
         headerTitleAlign: "center",
         headerLeft: () => (
-          <Pressable onPress={() => navigation.goBack()}>
+          <Pressable onPress={() => (navigation as any).navigate("auth/login")}>
             <Ionicons
               name="arrow-back"
               size={24}
@@ -30,7 +30,9 @@ export default function TabLayout() {
           </Pressable>
         ),
         headerRight: () => (
-          <Pressable onPress={() => navigation.navigate("Notifications")}>
+          <Pressable
+            onPress={() => (navigation as any).navigate("Notifications")}
+          >
             <Ionicons
               name="notifications"
               size={24}
@@ -42,12 +44,12 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="EmergencyReport"
+        name="HeartRateMonitoring"
         options={{
-          title: "신고이력",
+          title: "심박수",
           tabBarIcon: ({ focused }) => (
-            <AntDesign
-              name="notification"
+            <FontAwesome5
+              name="heartbeat"
               size={24}
               color={focused ? Colors.blue : Colors.navy}
             />
@@ -56,12 +58,12 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="HeartRateMonitoring"
+        name="EmergencyReport"
         options={{
-          title: "심박수",
+          title: "신고이력",
           tabBarIcon: ({ focused }) => (
-            <FontAwesome5
-              name="heartbeat"
+            <AntDesign
+              name="notification"
               size={24}
               color={focused ? Colors.blue : Colors.navy}
             />

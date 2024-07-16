@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
 import { Text, View } from "react-native";
@@ -9,6 +9,9 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import moment from "moment";
 
 import SearchForm from "@/components/SearchForm";
+import CustomTabView from "@/components/CustomTabView";
+import HeartRateList from "@/components/heartRateMonitoring/HeartRateList";
+import DateSet from "@/components/emergencyReport/DateSet";
 
 const JsonData = [
   {
@@ -21,16 +24,16 @@ const JsonData = [
     averageBpm: 89,
     minThreshold: 70,
     maxThreshold: 130,
-    heartrateStatus: "emergency",
+    heartrateStatus: "stability",
   },
   {
     id: "worker_uuid_2",
     name: "이*원",
     phone: "010-****-4567",
     loginId: "abd**",
-    minBpm: 50,
-    maxBpm: 140,
-    averageBpm: 89,
+    minBpm: 80,
+    maxBpm: 150,
+    averageBpm: 140,
     minThreshold: 70,
     maxThreshold: 130,
     heartrateStatus: "caution",
@@ -38,45 +41,53 @@ const JsonData = [
 ];
 
 export default function heartRateMonitoring() {
-  const [data, setData] = useState(JsonData);
-  
-  const [showDateModal, setShowDateModal] = useState(false);
-  const [date, setDate] = useState<{
-    startDate: string | null;
-    endDate: string | null;
-  }>({
-    startDate: moment().startOf("day").format("YYYY-MM-DD"),
-    endDate: null,
-  });
+  const [allData, setAllData] = useState(JsonData);
+
+  // useEffect(() => {
+  //   if (JsonData == null) return;
+  //   JsonData.forEach((element) => {
+  //     if(element.heartrateStatus)
+  //   });
+  // }, [JsonData]);
+
+  const routes = [
+    { key: "all", title: "전체" },
+    { key: "emergency", title: "위기" },
+    { key: "caution", title: "주의" },
+    { key: "stability", title: "정상" },
+  ];
+
+  const renderScene = ({ route }: { route: { key: string } }) => {
+    switch (route.key) {
+      case "all":
+        return <HeartRateList data={allData} />;
+      case "emergency":
+        return <HeartRateList data={allData} />;
+      case "caution":
+        return <HeartRateList data={allData} />;
+      case "stability":
+        return <HeartRateList data={allData} />;
+      default:
+        return <HeartRateList data={allData} />;
+    }
+  };
 
   const handleSearchClick = (input: string) => {
     console.log("Search Text:", input);
   };
 
+  const handleDate = (startDate: string | null, endDate: string | null) => {
+    console.log("startDate : ", startDate);
+    console.log("endDate : ", endDate);
+  };
+
   return (
     <View style={styles.container}>
       <SearchForm searchClick={handleSearchClick} />
-      <View style={styles.dateWrapper}>
-        <Text style={styles.dateText}>
-          기간 &nbsp;
-          <Text style={{ color: Colors.blue }}>
-            {date.startDate}
-            {date.endDate &&
-              date.endDate !== date.startDate &&
-              ` ~ ${date.endDate}`}
-          </Text>
-        </Text>
-        <TouchableOpacity
-          style={styles.dateIcon}
-          onPress={() => setShowDateModal(true)}
-        >
-          <Text style={styles.dateText}>기간 설정 &nbsp;</Text>
-          <MaterialCommunityIcons
-            name="calendar-month"
-            size={25}
-            color={Colors.navy}
-          />
-        </TouchableOpacity>
+      <DateSet handleDate={handleDate} />
+
+      <View style={styles.tab}>
+        <CustomTabView routes={routes} renderScene={renderScene} />
       </View>
     </View>
   );
@@ -113,5 +124,9 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignSelf: "center",
+  },
+  tab: {
+    width: "100%",
+    flex: 1,
   },
 });
