@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { Modal, StyleSheet, TouchableOpacity } from "react-native";
 
 import { Text, View } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import Colors from "@/constants/Colors";
 
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import moment from "moment";
 
 import SearchForm from "@/components/SearchForm";
 import CustomTabView from "@/components/CustomTabView";
 import HeartRateList from "@/components/heartRateMonitoring/HeartRateList";
 import DateSet from "@/components/emergencyReport/DateSet";
+import HelpModal from "@/components/heartRateMonitoring/HelpModal";
 
 const JsonData = [
   {
@@ -42,6 +43,7 @@ const JsonData = [
 
 export default function heartRateMonitoring() {
   const [allData, setAllData] = useState(JsonData);
+  const [showHelpModal, setShowHelpModal] = useState(false);
 
   // useEffect(() => {
   //   if (JsonData == null) return;
@@ -86,9 +88,28 @@ export default function heartRateMonitoring() {
       <SearchForm searchClick={handleSearchClick} />
       <DateSet handleDate={handleDate} />
 
-      <View style={styles.tab}>
-        <CustomTabView routes={routes} renderScene={renderScene} />
+      <View style={styles.tabContainer}>
+        <View style={styles.tab}>
+          <CustomTabView routes={routes} renderScene={renderScene} />
+        </View>
+        <TouchableOpacity
+          style={styles.questionIcon}
+          onPress={() => setShowHelpModal(true)}
+        >
+          <AntDesign name="questioncircleo" size={20} color={Colors.gray} />
+        </TouchableOpacity>
       </View>
+
+      <Modal
+        visible={showHelpModal}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setShowHelpModal(false)}
+      >
+        <View style={styles.modalContainer}>
+          <HelpModal modalClose={() => setShowHelpModal(false)} />
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -125,8 +146,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignSelf: "center",
   },
+  tabContainer: {
+    width: "100%",
+    position: "relative",
+    flex: 1,
+  },
   tab: {
     width: "100%",
     flex: 1,
+  },
+  questionIcon: {
+    position: "absolute",
+    top: 13,
+    right: 10,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.modal_background,
   },
 });

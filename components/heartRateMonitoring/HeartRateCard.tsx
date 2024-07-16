@@ -32,10 +32,11 @@ const HeartRateCard: React.FC<HeartRateCardProps> = ({ data }) => {
     emergency: "위기",
     caution: "주의",
     stability: "정상",
+    help:"심박수 등급"
   };
 
   const bpmToPosition = (bpm: number) => {
-    return ((bpm - 30) / (230 - 30)) * 100;
+    return ((bpm-30) / (200-30)) * 100;
   };
 
   return (
@@ -116,7 +117,7 @@ const HeartRateCard: React.FC<HeartRateCardProps> = ({ data }) => {
             <Text style={styles.bpmLabelText}>{data.averageBpm}</Text>
             <Text style={styles.bpmLabelText}>평균 심박수</Text>
           </View>
-          <Text style={[styles.bpmLabel, { left: "97%" }]}>230</Text>
+          <Text style={[styles.bpmLabel, { left: "96%" }]}>200</Text>
         </View>
       </View>
     </View>

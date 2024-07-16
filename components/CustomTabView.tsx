@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
   tabBar: {
     backgroundColor: "rgba(0, 0, 0, 0)",
     elevation: 0,
+    marginRight:20
   },
   indicator: {
     backgroundColor: Colors.navy,
