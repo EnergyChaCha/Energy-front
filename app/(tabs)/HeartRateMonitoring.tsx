@@ -56,22 +56,34 @@ export default function heartRateMonitoring() {
     { key: "all", title: "전체" },
     { key: "emergency", title: "위기" },
     { key: "caution", title: "주의" },
-    { key: "stability", title: "정상" },
+    { key: "stability", title: "안정" },
   ];
 
   const renderScene = ({ route }: { route: { key: string } }) => {
+    let filteredData;
     switch (route.key) {
       case "all":
-        return <HeartRateList data={allData} />;
+        filteredData = allData;
+        break;
       case "emergency":
-        return <HeartRateList data={allData} />;
+        filteredData = allData.filter(
+          (item) => item.heartrateStatus === "emergency"
+        );
+        break;
       case "caution":
-        return <HeartRateList data={allData} />;
+        filteredData = allData.filter(
+          (item) => item.heartrateStatus === "caution"
+        );
+        break;
       case "stability":
-        return <HeartRateList data={allData} />;
+        filteredData = allData.filter(
+          (item) => item.heartrateStatus === "stability"
+        );
+        break;
       default:
-        return <HeartRateList data={allData} />;
+        filteredData = allData;
     }
+    return <HeartRateList data={filteredData} />;
   };
 
   const handleSearchClick = (input: string) => {
