@@ -22,7 +22,7 @@ const HeartRateCard: React.FC<HeartRateCardProps> = ({ data }) => {
       case "emergency":
         return Colors.red;
       case "caution":
-        return Colors.blue;
+        return Colors.orange;
       default:
         return Colors.navy;
     }

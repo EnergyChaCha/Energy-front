@@ -20,6 +20,7 @@ export default {
   blue: "#3578FF",
   light_blue: "#5291FF",
   red: "#F74C4C",
+  orange:"#F7C44C",
   gray: "#606060",
   divider: "#D9D9DE",
   placeholder: "#91929F",
