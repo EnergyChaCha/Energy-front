@@ -1,3 +1,4 @@
+import Colors from "@/constants/Colors";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
@@ -5,9 +6,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 
-export {
-  ErrorBoundary,
-} from "expo-router";
+export { ErrorBoundary } from "expo-router";
 
 // 에셋 로딩이 완료되기 전에 스플래시 스크린이 자동으로 숨겨지지 않도록 방지
 SplashScreen.preventAutoHideAsync();
@@ -34,7 +33,6 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
-      
     }
   }, [loaded]);
 
@@ -66,6 +64,18 @@ function RootLayoutNav() {
       />
       <Stack.Screen name="auth/signUpWork" options={{ headerShown: false }} />
       <Stack.Screen name="auth/signUpHealth" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="modal/HeartRateUserInfo"
+        options={{
+          headerShown: true,
+          title: "임계치 설정",
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "notoSans7",
+            fontSize: 20,
+          },
+        }}
+      />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     </Stack>
   );

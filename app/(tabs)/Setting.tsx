@@ -1,6 +1,4 @@
 import { StyleSheet } from "react-native";
-
-import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "react-native";
 
 export default function Setting() {

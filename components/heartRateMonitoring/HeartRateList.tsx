@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Colors from "@/constants/Colors";
+import { useNavigation } from "@react-navigation/native";
 import HeartRateCard from "./HeartRateCard";
 
 interface WorkerData {
@@ -27,13 +28,16 @@ interface HeartRateListProps {
 }
 
 function HeartRateList({ data }: HeartRateListProps) {
+  const navigation = useNavigation();
+
+  const handleCardPress = (item: WorkerData) => {
+    (navigation as any).navigate("modal/HeartRateUserInfo", { userData: item });
+  };
 
   const renderWorkerItem = (item: WorkerData) => (
-    <View key={item.id}>
-      {data.map((item) => (
-        <HeartRateCard key={item.id} data={item} />
-      ))}
-    </View>
+    <TouchableOpacity  key={item.id} onPress={() => handleCardPress(item)}>
+      <HeartRateCard data={item} />
+    </TouchableOpacity>
   );
 
   return (

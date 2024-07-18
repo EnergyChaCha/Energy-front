@@ -16,7 +16,7 @@ interface HeartRateCardProps {
   };
 }
 
-const HeartRateCard: React.FC<HeartRateCardProps> = ({ data }) => {
+function HeartRateCard({ data }: HeartRateCardProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "emergency":
@@ -31,12 +31,12 @@ const HeartRateCard: React.FC<HeartRateCardProps> = ({ data }) => {
   const statusMap: { [key: string]: string } = {
     emergency: "위기",
     caution: "주의",
-    stability: "정상",
-    help:"심박수 등급"
+    stability: "안정",
+    help: "심박수 등급",
   };
 
   const bpmToPosition = (bpm: number) => {
-    return ((bpm-30) / (200-30)) * 100;
+    return ((bpm - 30) / (200 - 30)) * 100;
   };
 
   return (
@@ -122,7 +122,7 @@ const HeartRateCard: React.FC<HeartRateCardProps> = ({ data }) => {
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {

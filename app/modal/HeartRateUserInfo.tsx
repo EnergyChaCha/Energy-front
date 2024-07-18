@@ -1,0 +1,321 @@
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  TextInput,
+} from "react-native";
+import { LineChart } from "react-native-chart-kit";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Colors from "@/constants/Colors";
+import moment from "moment";
+import HeartRateChart from "@/components/heartRateMonitoring/HeartRateChart";
+import { useRoute } from "@react-navigation/native";
+
+
+interface WorkerData {
+  id: string;
+  name: string;
+  phone: string;
+  loginId: string;
+  minBpm: number;
+  maxBpm: number;
+  averageBpm: number;
+  minThreshold: number;
+  maxThreshold: number;
+  heartrateStatus: string;
+}
+
+const statusMap: { [key: string]: string } = {
+  emergency: "위기",
+  caution: "주의",
+  stability: "안정",
+};
+
+const statusColorMap: { [key: string]: string } = {
+  emergency: Colors.red,
+  caution: Colors.orange,
+  stability: Colors.navy,
+};
+
+
+const UserHeartInfo = () => {
+  const route = useRoute();
+  const { userData } = route.params as { userData: WorkerData };
+
+  const [minHeartValue, setMinHeartValue] = useState(
+    userData.minThreshold.toString()
+  );
+  const [maxHeartValue, setMaxHeartValue] = useState(
+    userData.maxThreshold.toString()
+  );
+
+  const heartRateData = [
+    { date: "0", minBpm: 30, maxBpm: 200, averageBpm: 89 },
+    { date: "1", minBpm: 40, maxBpm: 120, averageBpm: 89 },
+    { date: "2", minBpm: 60, maxBpm: 110, averageBpm: 89 },
+    { date: "3", minBpm: 55, maxBpm: 100, averageBpm: 89 },
+    { date: "4", minBpm: 56, maxBpm: 120, averageBpm: 89 },
+    { date: "5", minBpm: 80, maxBpm: 130, averageBpm: 89 },
+    { date: "6", minBpm: 90, maxBpm: 160, averageBpm: 89 },
+  ];
+
+  const handleComplete = () => {
+    console.log("Updated min threshold:", minHeartValue);
+    console.log("Updated max threshold:", maxHeartValue);
+  };
+
+  return (
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>회원 정보</Text>
+
+      <View style={styles.profileSection}>
+        <View style={styles.avatarContainer}>
+          <View
+            style={[
+              styles.iconContainer,
+              { backgroundColor: statusColorMap[userData.heartrateStatus] },
+            ]}
+          >
+            <MaterialCommunityIcons
+              name="heart-pulse"
+              size={24}
+              color="white"
+            />
+          </View>
+
+          <Text
+            style={[
+              styles.status,
+              { color: statusColorMap[userData.heartrateStatus] },
+            ]}
+          >
+            {statusMap[userData.heartrateStatus]}
+          </Text>
+          <Text style={styles.name}>{userData.name}</Text>
+          <Text style={styles.subInfo}>생년월일</Text>
+          <Text style={styles.subInfo}>성별</Text>
+        </View>
+        <View style={styles.detailsSection}>
+          <DetailRow label="아이디" value={userData.loginId} />
+          <DetailRow label="전화번호" value={userData.phone} />
+          <DetailRow label="근무지" value="안산 HUB" />
+          <DetailRow label="직무" value="상차" border={true} />
+        </View>
+      </View>
+
+      <Text style={styles.title}>심박수 통계</Text>
+      <Text style={styles.dateRange}>
+        기간{"   "}
+        <Text style={styles.date}>
+          {moment().subtract(7, "days").format("YYYY.MM.DD")} -{"  "}
+          {moment().format("YYYY.MM.DD")}
+        </Text>
+      </Text>
+
+      <HeartRateChart data={heartRateData} />
+
+      <View style={styles.bpmSection}>
+        <Text style={styles.title}>심박수 임계치 설정</Text>
+        <View style={styles.bpmRow}>
+          <BpmDisplay value={minHeartValue} onChangeText={setMinHeartValue} />
+          <Text style={styles.bpmSeparator}>~</Text>
+          <BpmDisplay value={maxHeartValue} onChangeText={setMaxHeartValue} />
+        </View>
+      </View>
+
+      <TouchableOpacity style={styles.button} onPress={handleComplete}>
+        <Text style={styles.buttonText}>완료</Text>
+      </TouchableOpacity>
+    </ScrollView>
+  );
+};
+
+const DetailRow = ({
+  label,
+  value,
+  border,
+}: {
+  label: string;
+  value: string;
+  border?: boolean;
+}) => (
+  <View style={[styles.detailRow, border ? { borderBottomWidth: 0 } : {}]}>
+    <Text style={styles.detailLabel}>{label}</Text>
+    <Text style={styles.detailValue}>{value}</Text>
+  </View>
+);
+
+const BpmDisplay = ({
+  value,
+  onChangeText,
+}: {
+  value: string;
+  onChangeText: (text: string) => void;
+}) => (
+  <View style={styles.bpmDisplay}>
+    <MaterialCommunityIcons name="heart-pulse" size={24} color={Colors.red} />
+    <TextInput
+      style={styles.bpmValue}
+      value={value}
+      onChangeText={onChangeText}
+      keyboardType="numeric"
+    />
+    <Text style={styles.bpmUnit}>BPM</Text>
+  </View>
+);
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  title: {
+    fontSize: 20,
+    fontFamily: "notoSans7",
+    lineHeight: 28,
+    marginBottom: 10,
+    color: Colors.navy,
+  },
+  profileSection: {
+    flexDirection: "row",
+    marginBottom: 5,
+  },
+  avatarContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "white",
+    padding: 10,
+    borderRadius: 10,
+    width: "30%",
+    height: 170,
+  },
+  avatar: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "red",
+  },
+  status: {
+    fontFamily: "notoSans5",
+    color: "red",
+    fontSize: 15,
+    lineHeight: 20,
+    marginTop: 5,
+    marginBottom: 10,
+  },
+  name: {
+    fontSize: 18,
+    fontFamily: "notoSans7",
+    lineHeight: 20,
+    marginVertical: 5,
+  },
+  subInfo: {
+    color: "gray",
+  },
+  detailsSection: {
+    marginBottom: 20,
+    marginLeft: 10,
+    flex: 1,
+    height: 170,
+    backgroundColor: "white",
+    justifyContent: "center",
+    padding: 10,
+    borderRadius: 10,
+  },
+  detailRow: {
+    flexDirection: "row",
+    borderBottomColor: "#d2d2d28e",
+    borderBottomWidth: 1,
+    padding: 10,
+  },
+  detailLabel: {
+    fontFamily: "notoSans5",
+    fontSize: 13,
+    lineHeight: 20,
+    color: Colors.navy,
+    width: 70,
+  },
+  detailValue: {
+    fontFamily: "notoSans6",
+    color: Colors.gray,
+    fontSize: 13,
+    lineHeight: 20,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  dateRange: {
+    color: "gray",
+    marginBottom: 10,
+  },
+  chart: {
+    marginVertical: 8,
+    borderRadius: 10,
+  },
+  date: { color: Colors.blue },
+  bpmSection: {
+    marginTop: 40,
+  },
+  bpmRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  bpmDisplay: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#ffffff",
+    padding: 10,
+    borderRadius: 10,
+  },
+  bpmIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 5,
+  },
+  bpmValue: {
+    fontSize: 18,
+    marginLeft: 10,
+    fontWeight: "bold",
+  },
+  bpmSeparator: {
+    fontSize: 24,
+    marginHorizontal: 10,
+  },
+  button: {
+    alignSelf: "center",
+    backgroundColor: Colors.blue,
+    padding: 8,
+    width:80,
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 15,
+    fontWeight: "bold",
+  },
+
+  iconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: Colors.red,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  bpmUnit: {
+    fontSize: 14,
+    marginLeft: 5,
+    color: Colors.gray,
+  },
+});
+
+export default UserHeartInfo;
