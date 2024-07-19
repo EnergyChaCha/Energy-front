@@ -5,6 +5,10 @@ import com.google.android.gms.wearable.*
 
 class WearableModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
+    private val dataClient = Wearable.getDataClient(reactContext)
+    private val messageClient = Wearable.getMessageClient(reactContext)
+    private val nodeClient = Wearable.getNodeClient(reactContext)
+
     override fun getName() = "WearModule"
 
     @ReactMethod
@@ -18,9 +22,22 @@ class WearableModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
     }
 
     @ReactMethod
-    fun sendMessage(path: String, message: String) {
-        val dataClient = Wearable.getDataClient(reactApplicationContext);
-        // Send message using dataClient
+    fun sendMessageToWear(path: String, message: String, promise: Promise) {
+        CoroutineScope(Dispatchers.Default).launch {
+            try {
+                val nodes = Tasks.await(nodeClient.connectedNodes)
+                nodes.forEach { node ->
+                    val result = Tasks.await(messageClient.sendMessage(node.id, path, message.toByteArray()))
+                    if (result != -1) {
+                        promise.resolve("Message sent successfully to ${node.displayName}")
+                    } else {
+                        promise.reject("ERROR", "Failed to send message to ${node.displayName}")
+                    }
+                }
+            } catch (e: Exception) {
+                promise.reject("ERROR", "Error sending message: ${e.message}")
+            }
+        }
     }
 
     companion object {
