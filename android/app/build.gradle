@@ -167,6 +167,7 @@ dependencies {
         implementation jscFlavor
     }
 
+    // Wearable Data Layer API
     implementation ("com.google.android.gms:play-services-wearable:17.1.0")
 }
 
