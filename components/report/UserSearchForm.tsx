@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -14,6 +14,7 @@ import CustomTextInput from "../CustomTextInput";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { getReportSearch, postReport } from "@/api/reportApi";
 
 interface UserInfo {
   id: string;
@@ -22,51 +23,18 @@ interface UserInfo {
   loginId: string;
   gender: number;
   workArea: string;
-  birth: string;
+  birthdate: string;
   department: string;
 }
 
-const JsonData: UserInfo[] = [
-  {
-    id: "worker_uuid_1",
-    name: "김*원",
-    phone: "010-****-4567",
-    loginId: "abd**",
-    gender: 0,
-    workArea: "안성 HUB",
-    birth: "2000.01.01",
-    department: "상차",
-  },
-  {
-    id: "worker_uuid_2",
-    name: "김*원",
-    phone: "010-****-4567",
-    loginId: "abd**",
-    gender: 0,
-    workArea: "안성 HUB",
-    birth: "2000.01.01",
-    department: "상차",
-  },
-  {
-    id: "worker_uuid_3",
-    name: "김*원",
-    phone: "010-****-4567",
-    loginId: "abd**",
-    gender: 0,
-    workArea: "안성 HUB",
-    birth: "2000.01.01",
-    department: "상차",
-  },
-  {
-    id: "worker_uuid_4",
-    name: "김*원",
-    phone: "010-****-4567",
-    loginId: "abd**",
-    gender: 0,
-    workArea: "안성 HUB",
-    birth: "2000.01.01",
-    department: "상차",
-  },
+const stateOption = [
+  { label: "의식없음", value: "의식없음" },
+  { label: "경련", value: "경련" },
+  { label: "화상", value: "화상" },
+  { label: "출혈", value: "출혈" },
+  { label: "쇼크", value: "쇼크" },
+  { label: "기절", value: "기절" },
+  { label: "기타", value: "기타" },
 ];
 
 const UserSearchForm = () => {
@@ -74,13 +42,19 @@ const UserSearchForm = () => {
   const [workArea, setWorkArea] = useState("");
   const [searchResults, setSearchResults] = useState<UserInfo[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserInfo | null>(null);
-  const [userState, setUserState] = useState<string>("");
+  const [userState, setUserState] = useState<string>("의식없음");
   const [userStateOther, setUserStateOther] = useState<string>("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState(false);
 
-  const handleSearch = () => {
-    setSearchResults(JsonData);
+  const handleSearch = async () => {
+    try {
+      const data = await getReportSearch(name, workArea);
+      console.log(data);
+      setSearchResults(data);
+    } catch (error) {
+      console.error("Failed to fetch user Info", error);
+    }
   };
 
   const searchListClick = (user: UserInfo) => {
@@ -88,28 +62,27 @@ const UserSearchForm = () => {
     setSelectedUser(user);
   };
 
-  const handleReportButtonPress = () => {
-    if (!selectedUser || !userState) {
-      Alert.alert("오류", "사용자와 상태를 선택해주세요.");
-      return;
-    }
-    setIsModalVisible(true);
-  };
-
-  const handleConfirmReport = async () => {
-    setIsModalVisible(false);
+  const reportConfirmClick = async () => {
     try {
-
-      
-      // 신고 후 상태 초기화
-      setSelectedUser(null);
-      setUserState("");
-      setUserStateOther("");
-      setModalContent(false)
+      // const response = await postReport({
+      //   patientId: "",
+      //   status: 0,
+      //   latitude: 12.1,
+      //   longitude: 11.1,
+      // });
+      setModalContent(true);
     } catch (error) {
       console.error("Report failed:", error);
       Alert.alert("오류", "신고 중 오류가 발생했습니다.");
     }
+  };
+
+  const handleConfirmReport = async () => {
+    setIsModalVisible(false);
+    setSelectedUser(null);
+    setUserState("");
+    setUserStateOther("");
+    setModalContent(false);
   };
 
   const renderItem = ({ item }: { item: UserInfo }) => (
@@ -119,7 +92,7 @@ const UserSearchForm = () => {
     >
       <Text style={styles.name}>{item.name}</Text>
       <Text style={styles.info}>
-        {`${item.loginId} / ${item.birth} / ${
+        {`${item.loginId} / ${item.birthdate} / ${
           item.gender == 0 ? "여자" : "남자"
         } / ${item.department}`}
       </Text>
@@ -222,15 +195,7 @@ const UserSearchForm = () => {
             <View style={styles.labelSize}>
               <CustomTextInput
                 label="상태"
-                options={[
-                  { label: "의식 없음", value: "unconscious" },
-                  { label: "경련", value: "seizure" },
-                  { label: "화상", value: "burn" },
-                  { label: "출혈", value: "bleeding" },
-                  { label: "쇼크", value: "shock" },
-                  { label: "기절", value: "fainting" },
-                  { label: "기타", value: "other" },
-                ]}
+                options={stateOption}
                 inputType="dropdown"
                 value={userState}
                 onChangeText={setUserState}
@@ -249,7 +214,7 @@ const UserSearchForm = () => {
           </View>
           <TouchableOpacity
             style={styles.reportButton}
-            onPress={handleReportButtonPress}
+            onPress={() => setIsModalVisible(true)}
           >
             <MaterialCommunityIcons
               name="car-emergency"
@@ -284,7 +249,7 @@ const UserSearchForm = () => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[styles.modalButton, styles.confirmButton]}
-                    onPress={() => setModalContent(true)}
+                    onPress={reportConfirmClick}
                   >
                     <Text style={styles.modalButtonText}>접수</Text>
                   </TouchableOpacity>
@@ -458,7 +423,6 @@ const styles = StyleSheet.create({
     fontFamily: "notoSans6",
     fontSize: 20,
     lineHeight: 25,
-    
   },
   modalButtonContainer: {
     flexDirection: "row",
@@ -466,7 +430,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   modalButton: {
-    marginTop:20,
+    marginTop: 20,
     borderRadius: 10,
     padding: 10,
     elevation: 2,

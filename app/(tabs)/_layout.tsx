@@ -85,20 +85,6 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="Notifications"
-        options={{
-          title: "알림",
-          tabBarIcon: ({ focused }) => (
-            <Octicons
-              name="bell-fill"
-              size={24}
-              color={focused ? Colors.blue : Colors.navy}
-            />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
         name="Setting"
         options={{
           title: "설정",

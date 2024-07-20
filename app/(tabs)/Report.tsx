@@ -38,7 +38,7 @@ export default function Report() {
       {!next ? (
         <>
           <Text style={styles.subTitle}>접수자 정보</Text>
-          <ReceiverInfo Receiver={JsonData.ReceiverInfo} />
+          <ReceiverInfo />
 
           <TouchableOpacity
             style={styles.nextBtn}

@@ -1,5 +1,15 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+export const saveUserInfo = async (id: string, role:string) => {
+  try {
+    await AsyncStorage.setItem("@user_id", id);
+    await AsyncStorage.setItem("@user_role", role);
+  } catch (error) {
+    console.error("Failed to save token.", error);
+  }
+};
+
+
 // 저장
 export const saveToken = async (token:string) => {
   try {

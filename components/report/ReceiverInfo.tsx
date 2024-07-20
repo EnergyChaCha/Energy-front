@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -10,48 +10,72 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import Colors from "@/constants/Colors";
 import CustomTextInput from "@/components/CustomTextInput";
+import { getReportMyInfo } from "@/api/reportApi";
 
-interface ReceiverProps {
-  Receiver: {
-    id: string;
-    name: string;
-    phone: string;
-    workArea: string;
-    department: string;
-  };
+interface ReceiverInfo {
+  id: string;
+  name: string;
+  phone: string;
+  workArea: string;
+  department: string;
 }
 
-function ReceiverInfo({ Receiver }: ReceiverProps) {
+function ReceiverInfo() {
+  const [userInfo, setUserInfo] = useState<ReceiverInfo | null>(null);
+  const userId = 9;
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const data = await getReportMyInfo(userId);
+        setUserInfo({
+          id: data.id,
+          name: data.name,
+          phone: data.phone,
+          workArea: data.workArea,
+          department: data.department
+        });
+      } catch (error) {
+        console.error("Failed to fetch user Info", error);
+      }
+    };
+    fetchUserInfo();
+  }, [userId]);
+
   return (
     <View style={styles.container}>
-      <View style={styles.labelSize}>
-        <CustomTextInput
-          label="아이디"
-          value={Receiver.name}
-          inputType="label"
-        />
-      </View>
-      <View style={styles.labelSize}>
-        <CustomTextInput
-          label="이름"
-          value={Receiver.phone}
-          inputType="label"
-        />
-      </View>
-      <View style={styles.labelSize}>
-        <CustomTextInput
-          label="성별"
-          value={Receiver.workArea}
-          inputType="label"
-        />
-      </View>
-      <View style={styles.labelSize}>
-        <CustomTextInput
-          label="전화번호"
-          value={Receiver.department}
-          inputType="label"
-        />
-      </View>
+      {userInfo && (
+        <>
+          <View style={styles.labelSize}>
+            <CustomTextInput
+              label="아이디"
+              value={userInfo.name}
+              inputType="label"
+            />
+          </View>
+          <View style={styles.labelSize}>
+            <CustomTextInput
+              label="이름"
+              value={userInfo.phone}
+              inputType="label"
+            />
+          </View>
+          <View style={styles.labelSize}>
+            <CustomTextInput
+              label="성별"
+              value={userInfo.workArea}
+              inputType="label"
+            />
+          </View>
+          <View style={styles.labelSize}>
+            <CustomTextInput
+              label="전화번호"
+              value={userInfo.department}
+              inputType="label"
+            />
+          </View>
+        </>
+      )}
     </View>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,16 +8,15 @@ import {
   ScrollView,
   TextInput,
 } from "react-native";
-import { LineChart } from "react-native-chart-kit";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import moment from "moment";
 import HeartRateChart from "@/components/heartRateMonitoring/HeartRateChart";
 import { useRoute } from "@react-navigation/native";
-
+import { getHeartRate, getHeartRateDetail, putHeartRate } from "@/api/heartApi";
 
 interface WorkerData {
-  id: string;
+  id: number;
   name: string;
   phone: string;
   loginId: string;
@@ -27,6 +26,17 @@ interface WorkerData {
   minThreshold: number;
   maxThreshold: number;
   heartrateStatus: string;
+}
+
+interface UserInfo {
+  name: string;
+  birthdate: string;
+  gender: boolean;
+  status: number;
+  phone: string;
+  loginId: string;
+  workArea: string;
+  department: string;
 }
 
 const statusMap: { [key: string]: string } = {
@@ -41,10 +51,14 @@ const statusColorMap: { [key: string]: string } = {
   stability: Colors.navy,
 };
 
-
 const UserHeartInfo = () => {
   const route = useRoute();
-  const { userData } = route.params as { userData: WorkerData };
+  const { userData, userId } = route.params as {
+    userData: WorkerData;
+    userId: number;
+  };
+
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
   const [minHeartValue, setMinHeartValue] = useState(
     userData.minThreshold.toString()
@@ -52,6 +66,40 @@ const UserHeartInfo = () => {
   const [maxHeartValue, setMaxHeartValue] = useState(
     userData.maxThreshold.toString()
   );
+
+  useEffect(() => {
+    const fetchHeartRateData = async () => {
+      try {
+        const data = await getHeartRate(userId);
+        setMinHeartValue(data.minThreshold);
+        setMaxHeartValue(data.maxThreshold);
+      } catch (error) {
+        console.error("Failed to fetch heart rate data", error);
+      }
+    };
+
+    const fetchUserData = async () => {
+      try {
+        const data = await getHeartRateDetail(userId);
+        setUserInfo({
+          name: data.name,
+          birthdate: data.birthdate,
+          gender: data.gender,
+          status: data.status,
+          phone: data.phone,
+          loginId: data.loginId,
+          workArea: data.workArea,
+          department: data.department,
+        });
+        
+      } catch (error) {
+        console.error("Failed to fetch user data", error);
+      }
+    };
+
+    // fetchHeartRateData();
+    // fetchUserData();
+  }, [userId]);
 
   const heartRateData = [
     { date: "0", minBpm: 30, maxBpm: 200, averageBpm: 89 },
@@ -63,9 +111,17 @@ const UserHeartInfo = () => {
     { date: "6", minBpm: 90, maxBpm: 160, averageBpm: 89 },
   ];
 
-  const handleComplete = () => {
-    console.log("Updated min threshold:", minHeartValue);
-    console.log("Updated max threshold:", maxHeartValue);
+  const handleComplete = async () => {
+    try {
+      const data = await putHeartRate(
+        userId,
+        parseInt(minHeartValue),
+        parseInt(maxHeartValue)
+      );
+      console.log(data);
+    } catch (error) {
+      console.error("Failed to fetch heart rate data", error);
+    }
   };
 
   return (
@@ -292,7 +348,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     backgroundColor: Colors.blue,
     padding: 8,
-    width:80,
+    width: 80,
     borderRadius: 5,
     alignItems: "center",
     marginTop: 10,

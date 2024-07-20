@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import HeartRateCard from "./HeartRateCard";
 
 interface WorkerData {
-  id: string;
+  id: number;
   name: string;
   phone: string;
   loginId: string;
@@ -31,7 +31,10 @@ function HeartRateList({ data }: HeartRateListProps) {
   const navigation = useNavigation();
 
   const handleCardPress = (item: WorkerData) => {
-    (navigation as any).navigate("modal/HeartRateUserInfo", { userData: item });
+    (navigation as any).navigate("modal/HeartRateUserInfo", {
+      userData: item,
+      userId: item.id,
+    });
   };
 
   const renderWorkerItem = (item: WorkerData) => (
