@@ -4,6 +4,7 @@ import CustomTextInput from "@/components/CustomTextInput";
 import Colors from "@/constants/Colors";
 import { useNavigation } from "@react-navigation/native";
 import { hello, signIn } from "@/api/apiServices";
+import { getToken, saveToken } from "@/util/storage";
 
 const LoginScreen = () => {
   const [id, setId] = useState("");
@@ -15,31 +16,19 @@ const LoginScreen = () => {
   const handleLogin = async () => {
     try {
       const res = await signIn(id, password);
-      // const res = await hello(); // get Test
+      saveToken(res.accessToken);
+      // const result = await getToken();
+      // console.log("result ---------", result);
 
-      // Alert.alert(res);
-      // localStorage.setItem("accessToken", res.accessToken);
-      // localStorage.setItem("userName", res.name);
-      
       (navigation as any).navigate("(tabs)");
     } catch (error) {
       setErrorMessage("아이디와 비밀번호가 올바르지 않습니다.");
       console.log(error);
     }
   };
-  const signUpClick = () =>{
+  const signUpClick = () => {
     (navigation as any).navigate("auth/termsOfService");
   };
-
-
-  // const handleLogin = () => {
-  
-  //   if (id !== "energy") {
-  //     setErrorMessage("아이디와 비밀번호가 올바르지 않습니다.");
-  //   } else {
-  //     navigation.navigate("(tabs)");
-  //   }
-  // };
 
   return (
     <View style={styles.container}>

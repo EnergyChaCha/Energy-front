@@ -3,9 +3,9 @@ import { StyleSheet } from "react-native";
 import { View, ScrollView } from "react-native";
 import Colors from "@/constants/Colors";
 import SearchForm from "@/components/SearchForm";
-import TimeDivider from "@/components/emergencyReport/TimeDivider";
-import ReportItem from "@/components/emergencyReport/ReportItem";
-import DateSet from "@/components/emergencyReport/DateSet";
+import TimeDivider from "@/components/reportInquire/TimeDivider";
+import ReportItem from "@/components/reportInquire/ReportItem";
+import DateSet from "@/components/reportInquire/DateSet";
 
 const JsonData = [
   {
@@ -121,7 +121,7 @@ const groupDataByDateAndHour = (data: ReportData[]): GroupedData => {
   }, {});
 };
 
-export default function EmergencyReport() {
+export default function ReportInquery() {
   const [data, setData] = useState(JsonData);
   const groupedData = useMemo(() => groupDataByDateAndHour(data), [data]);
 
@@ -146,7 +146,7 @@ export default function EmergencyReport() {
       />
       <DateSet handleDate={handleDate} />
 
-      <ScrollView style={styles.scrollView}>
+      <View style={styles.scrollView}>
         {Object.entries(groupedData).map(([date, hourGroups]) => (
           <React.Fragment key={date}>
             <TimeDivider date={date} />
@@ -159,7 +159,7 @@ export default function EmergencyReport() {
             ))}
           </React.Fragment>
         ))}
-      </ScrollView>
+      </View>
     </View>
   );
 }

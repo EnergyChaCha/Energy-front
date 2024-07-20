@@ -11,13 +11,13 @@ export const signUp = async (name: string) => {
   }
 };
 
-export const signIn = async (adminId: string, adminPw: string) => {
+export const signIn = async (loginId: string, password: string) => {
   try {
     const response = await api.post("/auth/signin", {
-      adminId: `${adminId}`,
-      adminPw: `${adminPw}`,
-    });    
-    return response;
+      loginId: `${loginId}`,
+      password: `${password}`,
+    });
+    return response.data.result;
   } catch (error) {
     console.log(error);
   }

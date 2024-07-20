@@ -7,15 +7,22 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import {
+  NavigationProp,
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import Colors from "@/constants/Colors";
 import CustomTextInput from "@/components/CustomTextInput";
+import { RootStackParamList } from "./signupType";
+import { signUpHealthInfo } from "@/api/authApi";
 
 const SignUpHealthScreen = () => {
   const [form, setForm] = useState({
     emergencyContact: "",
-    emergencyRelation: "",
-    underlyingCondition: "",
+    emergencyContactRelation: "",
+    underlyingConditions: "",
     allergies: "",
     medications: "",
     bloodType: "",
@@ -36,14 +43,31 @@ const SignUpHealthScreen = () => {
 
   const organDonorOptions = [
     { label: "선택해주세요", value: "" },
-    { label: "예", value: "yes" },
-    { label: "아니오", value: "no" },
+    { label: "예", value: true },
+    { label: "아니오", value: false },
   ];
 
-  const navigation = useNavigation();
+  type SignUpWorkRouteProp = RouteProp<RootStackParamList, "auth/signUpHealth">;
+  type SignUpHealthNavigationProp = NavigationProp<
+    RootStackParamList,
+    "auth/login"
+  >;
 
-  const handleSignUp = () => {
-    navigation.navigate("auth/login");
+  const navigation = useNavigation<SignUpHealthNavigationProp>();
+  const route = useRoute<SignUpWorkRouteProp>();
+  const { memberId } = route.params;
+  const handleSignUp = async () => {
+    try {
+      const response = await signUpHealthInfo(memberId, form);
+      if (response) {
+        navigation.navigate("auth/login");
+      } else {
+        Alert.alert("회원 가입에 실패했습니다. 다시 시도해주세요.");
+      }
+    } catch (error) {
+      Alert.alert("회원 가입 중 오류가 발생했습니다. 다시 시도해주세요.");
+      console.error(error);
+    }
   };
 
   return (
@@ -60,15 +84,17 @@ const SignUpHealthScreen = () => {
         />
         <CustomTextInput
           label="응급 연락처 관계"
-          value={form.emergencyRelation}
-          onChangeText={(value) => handleChange("emergencyRelation", value)}
+          value={form.emergencyContactRelation}
+          onChangeText={(value) =>
+            handleChange("emergencyContactRelation", value)
+          }
           placeholder="응급 연락처와의 관계를 입력하세요"
           inputType="input"
         />
         <CustomTextInput
           label="기저질환"
-          value={form.underlyingCondition}
-          onChangeText={(value) => handleChange("underlyingCondition", value)}
+          value={form.underlyingConditions}
+          onChangeText={(value) => handleChange("underlyingConditions", value)}
           placeholder="기저질환을 입력하세요"
           inputType="input"
         />

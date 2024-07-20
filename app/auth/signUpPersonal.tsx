@@ -7,15 +7,21 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import {
+  NavigationProp,
+  useNavigation,
+  useRoute,
+  RouteProp,
+} from "@react-navigation/native";
 import Colors from "@/constants/Colors";
 import CustomTextInput from "@/components/CustomTextInput";
+import { RootStackParamList } from "./signupType";
 
 const SignUpPersonalScreen = () => {
   const [form, setForm] = useState({
     name: "",
     phone: "",
-    birth: undefined,
+    birthdate: "",
     gender: "",
     address: "",
   });
@@ -32,20 +38,47 @@ const SignUpPersonalScreen = () => {
     setForm({ ...form, [name]: value });
   };
 
-  const navigation = useNavigation();
+  type SignUpPersonalNavigationProp = NavigationProp<
+    RootStackParamList,
+    "auth/signUpPersonal"
+  >;
+  type SignUpPersonalRouteProp = RouteProp<
+    RootStackParamList,
+    "auth/signUpPersonal"
+  >;
+
+  const navigation = useNavigation<SignUpPersonalNavigationProp>();
+  const route = useRoute<SignUpPersonalRouteProp>();
+  const { signUpData } = route.params;
+
   const handleSignUp = () => {
-    if (form.name == "" || form.phone == "" || form.birth == undefined || form.birth == "") {
+    if (!form.name || !form.phone || !form.birthdate) {
       Alert.alert("필수 항목을 모두 입력해주세요.");
       return;
     }
 
-    if ((form.birth + "").length != 8) {
+    if (form.birthdate.length !== 8) {
       Alert.alert("생년월일을 8자로 입력해주세요.");
       return;
     }
+      const formattedBirth = `${form.birthdate.substring(
+        0,
+        4
+      )}-${form.birthdate.substring(4, 6)}-${form.birthdate.substring(6, 8)}`;
 
-    navigation.navigate("auth/signUpWork");
+
+    navigation.navigate("auth/signUpWork", {
+      signUpData,
+      personalData: {
+        name: form.name,
+        phone: form.phone,
+        birthdate: formattedBirth,
+        gender: form.gender == "male" ? true : false,
+        address: form.address,
+      },
+    });
   };
+
 
   return (
     <View style={styles.container}>
@@ -70,8 +103,8 @@ const SignUpPersonalScreen = () => {
         />
         <CustomTextInput
           label="생년월일"
-          value={form.birth}
-          onChangeText={(value) => handleChange("birth", value)}
+          value={form.birthdate}
+          onChangeText={(value) => handleChange("birthdate", value)}
           placeholder="YYYYMMDD (8글자로 입력해주세요)"
           inputType="number"
           required={true}

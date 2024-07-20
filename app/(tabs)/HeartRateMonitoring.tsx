@@ -11,7 +11,7 @@ import moment from "moment";
 import SearchForm from "@/components/SearchForm";
 import CustomTabView from "@/components/CustomTabView";
 import HeartRateList from "@/components/heartRateMonitoring/HeartRateList";
-import DateSet from "@/components/emergencyReport/DateSet";
+import DateSet from "@/components/reportInquire/DateSet";
 import HelpModal from "@/components/heartRateMonitoring/HelpModal";
 
 const JsonData = [

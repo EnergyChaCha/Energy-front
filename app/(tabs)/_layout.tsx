@@ -44,6 +44,19 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
+        name="ReportInquire"
+        options={{
+          title: "신고이력",
+          tabBarIcon: ({ focused }) => (
+            <AntDesign
+              name="notification"
+              size={24}
+              color={focused ? Colors.blue : Colors.navy}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="HeartRateMonitoring"
         options={{
           title: "심박수",
@@ -58,23 +71,9 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="EmergencyReport"
+        name="Report"
         options={{
-          title: "신고이력",
-          tabBarIcon: ({ focused }) => (
-            <AntDesign
-              name="notification"
-              size={24}
-              color={focused ? Colors.blue : Colors.navy}
-            />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="SOS"
-        options={{
-          title: "SOS",
+          title: "Report",
           tabBarIcon: ({ focused }) => (
             <MaterialIcons
               name="sos"

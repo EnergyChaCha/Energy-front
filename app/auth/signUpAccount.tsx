@@ -7,14 +7,15 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
 import Colors from "@/constants/Colors";
 import CustomTextInput from "@/components/CustomTextInput";
+import { RootStackParamList } from "./signupType";
 
 const SignUpAccountScreen = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [form, setForm] = useState({
-    id: "",
+    loginId: "",
     password: "",
     confirmPassword: "",
   });
@@ -23,18 +24,33 @@ const SignUpAccountScreen = () => {
     setForm({ ...form, [name]: value });
   };
 
-  const navigation = useNavigation();
+  type SignUpAccountNavigationProp = NavigationProp<
+    RootStackParamList,
+    "SignUpAccountScreen"
+  >;
+
+  const navigation = useNavigation<SignUpAccountNavigationProp>();
 
   const handleSignUp = () => {
-    // if (form.password !== form.confirmPassword) {
-    //   Alert.alert("비밀번호가 일치하지 않습니다.");
-    //   return;
-    // }
-    // if (form.id == "" || form.password == "" || form.confirmPassword == "") {
-    //   Alert.alert("필수 항목을 모두 입력해주세요.");
-    //   return;
-    // }
-    navigation.navigate("auth/signUpPersonal", { form });
+    if (form.password !== form.confirmPassword) {
+      setErrorMessage("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+    if (
+      form.loginId === "" ||
+      form.password === "" ||
+      form.confirmPassword === ""
+    ) {
+      setErrorMessage("필수 항목을 모두 입력해주세요.");
+      return;
+    }
+    setErrorMessage("");
+    navigation.navigate("auth/signUpPersonal", {
+      signUpData: {
+        loginId: form.loginId,
+        password: form.password,
+      },
+    });
   };
 
   return (
@@ -43,8 +59,8 @@ const SignUpAccountScreen = () => {
       <ScrollView style={styles.scroll}>
         <CustomTextInput
           label="아이디"
-          value={form.id}
-          onChangeText={(value) => handleChange("id", value)}
+          value={form.loginId}
+          onChangeText={(value) => handleChange("loginId", value)}
           placeholder="아이디"
           inputType="input"
           required

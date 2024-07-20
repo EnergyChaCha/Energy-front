@@ -19,7 +19,7 @@ interface CustomTextInputProps {
   required?: boolean;
   inputType: "input" | "label" | "dropdown" | "number";
   bottomLine?: boolean;
-  options?: { label: string; value: string }[];
+  options?: { label: string; value: string|boolean }[];
 }
 
 const CustomTextInput: React.FC<CustomTextInputProps> = ({
@@ -82,7 +82,7 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
             >
               {options.map((option) => (
                 <Picker.Item
-                  key={option.value}
+                  key={option.label}
                   label={option.label}
                   value={option.value}
                 />
