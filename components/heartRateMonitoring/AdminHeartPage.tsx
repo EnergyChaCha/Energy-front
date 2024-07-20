@@ -2,12 +2,9 @@ import { useEffect, useState } from "react";
 import { Modal, StyleSheet, TouchableOpacity } from "react-native";
 
 import { Text, View } from "react-native";
-import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import Colors from "@/constants/Colors";
 
 import { AntDesign } from "@expo/vector-icons";
-import moment from "moment";
-
 import SearchForm from "@/components/SearchForm";
 import CustomTabView from "@/components/CustomTabView";
 import HeartRateList from "@/components/heartRateMonitoring/HeartRateList";

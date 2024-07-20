@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import AdminReportInquire from "@/components/report/AdminReportInquire";
-import UserReportInquire from "@/components/report/UserReportInquire";
+import AdminReportInquire from "@/components/reportInquire/PageAdminReportInquire";
+import UserReportInquire from "@/components/reportInquire/PageUserReportInquire";
 
 export default function HeartRateMonitoring() {
   const [role, setRole] = useState<string | null>(null);
