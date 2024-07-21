@@ -26,30 +26,37 @@ export default function RootLayout() {
 
   // 네비게이션 트리에서 오류를 잡기 위해 Expo Router가 Error Boundaries를 사용함
   useEffect(() => {
-    if (error) throw error;
+    if (error) {
+      console.error("Font loading error:", error);
+      throw error;
+    }
   }, [error]);
 
   // 폰트가 로드되면 스플래시 스크린을 숨김
   useEffect(() => {
     if (loaded) {
+      console.log("Fonts loaded, hiding splash screen.");
       SplashScreen.hideAsync();
+    } else {
+      console.log("Fonts not loaded yet.");
     }
   }, [loaded]);
 
   // 폰트가 로드되지 않았으면 null을 반환
   if (!loaded) {
+    console.log("Fonts are still loading...");
     return null;
   }
 
   // 폰트가 로드되면 RootLayoutNav 컴포넌트를 렌더링
+  console.log("Fonts loaded, rendering RootLayoutNav.");
   return <RootLayoutNav />;
 }
 
 function RootLayoutNav() {
   return (
-    <Stack initialRouteName="(tabs)">
+    <Stack initialRouteName="auth/login">
       <Stack.Screen name="auth/login" options={{ headerShown: false }} />
-
       <Stack.Screen
         name="auth/termsOfService"
         options={{ headerShown: false }}
