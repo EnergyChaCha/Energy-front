@@ -38,7 +38,7 @@ export default function TabLayout() {
             color="#000000"
             style={{ marginLeft: 15 }}
             onPress={() => {
-              navigation.navigate("auth/Login"); // 로그인 페이지로 이동
+              (navigation as any).navigate("auth/login"); // 로그인 페이지로 이동
             }}
           />
         ),

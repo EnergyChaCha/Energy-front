@@ -21,8 +21,6 @@ export const getUserID = async () => {
 export const getUserRole = async () => {
   try {
     const role = await AsyncStorage.getItem("@user_role");
-    console.log("role", role);
-    
     return role;
   } catch (error) {
     console.error("Failed to fetch id.", error);

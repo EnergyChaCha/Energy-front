@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text, FlatList } from "react-native";
 import Colors from "@/constants/Colors";
+import moment from "moment";
 
 interface FlagInfo {
   name: string;
@@ -26,16 +27,22 @@ interface ReportItemProps {
 function ReportItemUser({ time, list }: ReportItemProps) {
   const renderReportItem = ({ item }: { item: ReportData }) => (
     <>
+      <Text style={[styles.itemGPSText, { marginBottom: 0 }]}>GPS</Text>
       <Text style={styles.itemGPSText}>{item.gps}</Text>
-      <Text style={styles.itemBPMText}>{item.bpm} BPM (신고 시 심박수)</Text>
+      <Text style={styles.itemBPMText}>
+        {item.bpm} BPM <Text style={{ fontSize: 12 }}>(신고 시 심박수)</Text>
+      </Text>
       <Text style={styles.itemInfoText}>{item.flag}</Text>
       {item.flag == "보낸 신고" && (
         <Text style={styles.itemInfoText}>
           {item.flagInfo.name} / {item.flagInfo.gender} /{" "}
           {item.flagInfo.workArea} / {item.flagInfo.department} /{" "}
-          {item.flagInfo.status} /
+          {item.flagInfo.status}
         </Text>
       )}
+      <Text style={styles.dateTimeText}>
+        {moment(item.createdTime).format("YYYY/MM/DD HH:mm:ss")}
+      </Text>
     </>
   );
 
@@ -106,6 +113,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 20,
     color: Colors.gray,
+  },
+  dateTimeText: {
+    fontFamily: "notoSans4",
+    fontSize: 12,
+    lineHeight: 20,
+    color: Colors.gray,
+    alignSelf: "flex-end",
   },
 });
 

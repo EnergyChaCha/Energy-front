@@ -1,7 +1,8 @@
+import { getAllMembers } from "@/api/accountApi";
 import CustomTextInput from "@/components/CustomTextInput";
 import Table from "@/components/Table";
 import Colors from "@/constants/Colors";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Text, View, ScrollView } from "react-native";
 
@@ -217,12 +218,39 @@ const workerData = [
   },
 ];
 
+interface MemberData {
+  id: number;
+  name: string;
+  birthdate: string;
+  gender: boolean;
+  phone: string;
+  loginId: string;
+  workArea: string;
+  department: string;
+  role: string;
+}
+
 export default function MemberManagement() {
+  const [memberData, setMemberData] = useState<MemberData[] | null>(null);
+
+  const fetchMemberData = async () => {
+    try {
+      const members = await getAllMembers();
+      if (members) setMemberData(members);
+    } catch (error) {
+      console.error("Failed to fetch role from storage.", error);
+    }
+  };
+  
+  useEffect(() => {
+    fetchMemberData();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>회원 관리</Text>
       <View style={styles.tableContainer}>
-        <Table data={workerData} />
+        <Table data={memberData} refreshData={fetchMemberData} />
       </View>
     </View>
   );

@@ -14,7 +14,6 @@ export default function HeartRateMonitoring() {
       const fetchUserRole = async () => {
         try {
           const storedRole = await getUserRole();
-          console.log("storedRole은 실행됨?", storedRole);
 
           if (storedRole) {
             setRole(storedRole);

@@ -11,6 +11,18 @@ export const getReportListAll = async () => {
   }
 };
 
+// RI-07: 근로자 신고이력 전체 조회
+export const getReportListUser = async (start:string, end:string) => {
+  try {
+    const response = await api.get(
+      `/report/my-report?start=${start}&end=${end}&page=0&size=200&flag=0`
+    );
+    return response.data.result.report;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // RI-05: 신고이력 상세 조회
 export const getReportListDetail = async (reportId: number) => {
   try {

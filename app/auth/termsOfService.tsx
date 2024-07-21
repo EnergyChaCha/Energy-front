@@ -24,7 +24,7 @@ const TermsOfService = () => {
   const navigation = useNavigation();
 
   const handleSignUp = () => {
-    navigation.navigate("auth/signUpAccount");
+    (navigation as any).navigate("auth/signUpAccount");
   };
 
   return (

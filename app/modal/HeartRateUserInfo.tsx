@@ -58,23 +58,19 @@ const UserHeartInfo = () => {
     userId: number;
   };
   console.log(userId);
-  
 
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
-  const [minHeartValue, setMinHeartValue] = useState(
-    userData.minThreshold.toString()
-  );
-  const [maxHeartValue, setMaxHeartValue] = useState(
-    userData.maxThreshold.toString()
-  );
+  const [minHeartValue, setMinHeartValue] = useState("0");
+  const [maxHeartValue, setMaxHeartValue] = useState("0");
 
   useEffect(() => {
     const fetchHeartRateData = async () => {
       try {
         const data = await getHeartRate(userId);
-        setMinHeartValue(data.minThreshold);
-        setMaxHeartValue(data.maxThreshold);
+
+        setMinHeartValue(data.minTreshold.toString());
+        setMaxHeartValue(data.maxTreshold.toString());
       } catch (error) {
         console.error("Failed to fetch heart rate data", error);
       }
@@ -93,7 +89,6 @@ const UserHeartInfo = () => {
           workArea: data.workArea,
           department: data.department,
         });
-        
       } catch (error) {
         console.error("Failed to fetch user data", error);
       }
@@ -115,8 +110,6 @@ const UserHeartInfo = () => {
 
   const handleComplete = async () => {
     try {
-      console.log("userId--", userId);
-      
       const data = await putHeartRate(
         userId,
         parseInt(minHeartValue),

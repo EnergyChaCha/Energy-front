@@ -11,12 +11,13 @@ import {
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { getMemberDetail, postGrantMember } from "@/api/accountApi";
 
 interface WorkerData {
   id: number;
   name: string;
-  birth: string;
-  gender: number;
+  birthdate: string;
+  gender: boolean;
   phone: string;
   loginId: string;
   workArea: string;
@@ -25,13 +26,13 @@ interface WorkerData {
 }
 
 interface TableProps {
-  data: WorkerData[];
+  data: WorkerData[] | null;
+  refreshData: () => Promise<void>;
 }
 
-const Table: React.FC<TableProps> = ({ data }) => {
+const Table: React.FC<TableProps> = ({ data, refreshData }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
-
   const [selectedWorker, setSelectedWorker] = useState<WorkerData | null>(null);
 
   const headers = [
@@ -48,8 +49,8 @@ const Table: React.FC<TableProps> = ({ data }) => {
   const formatData = (item: WorkerData) => ({
     name: item.name,
     loginId: item.loginId,
-    birth: item.birth,
-    gender: item.gender === 0 ? "남성" : "여성",
+    birthdate: item.birthdate,
+    gender: item.gender ? "남성" : "여성",
     phone: item.phone,
     workArea: item.workArea,
     department: item.department,
@@ -70,19 +71,38 @@ const Table: React.FC<TableProps> = ({ data }) => {
     </View>
   );
 
+  const fetchMemberDetail = async (id: number) => {
+    try {
+      const member = await getMemberDetail(id);
+      if (member) setSelectedWorker(member);
+    } catch (error) {
+      console.error("Failed to fetch role from storage.", error);
+    }
+  };
+
+  const fetchGrantRole = async (id: number) => {
+    try {
+      const member = await postGrantMember(id, "ADMIN");
+      if (member) setSelectedWorker(member);
+    } catch (error) {
+      console.error("Failed to fetch role from storage.", error);
+    }
+  };
+
   const handleRowPress = (worker: WorkerData) => {
-    setSelectedWorker(worker);
+    fetchMemberDetail(worker.id);
     setModalVisible(true);
   };
 
-  const handleAdminAssign = () => {
+  const handleAdminAssign = async () => {
     setConfirmModalVisible(true);
   };
 
-  const confirmAdminAssign = () => {
+  const confirmAdminAssign = async () => {
     if (selectedWorker) {
       console.log("Assigned admin ID:", selectedWorker.id);
-      
+      await fetchGrantRole(selectedWorker.id);
+      await refreshData(); 
     }
     setConfirmModalVisible(false);
     setModalVisible(false);
@@ -92,7 +112,7 @@ const Table: React.FC<TableProps> = ({ data }) => {
     <View style={styles.tableWrapper}>
       <Text style={styles.totalNum}>
         총{"  "}
-        <Text style={{ color: Colors.blue }}>{data.length}</Text> 명
+        <Text style={{ color: Colors.blue }}>{data ? data.length : 0}</Text> 명
       </Text>
       <ScrollView style={styles.tableScroll}>
         <View>
@@ -103,22 +123,23 @@ const Table: React.FC<TableProps> = ({ data }) => {
               </Text>
             ))}
           </View>
-          {data.map((worker, rowIndex) => {
-            const formattedWorker = formatData(worker);
-            return (
-              <TouchableOpacity
-                key={rowIndex}
-                style={styles.dataRow}
-                onPress={() => handleRowPress(worker)}
-              >
-                {Object.values(formattedWorker).map((cell, cellIndex) => (
-                  <Text key={cellIndex} style={styles.dataCell}>
-                    {cell}
-                  </Text>
-                ))}
-              </TouchableOpacity>
-            );
-          })}
+          {data &&
+            data.map((worker, rowIndex) => {
+              const formattedWorker = formatData(worker);
+              return (
+                <TouchableOpacity
+                  key={rowIndex}
+                  style={styles.dataRow}
+                  onPress={() => handleRowPress(worker)}
+                >
+                  {Object.values(formattedWorker).map((cell, cellIndex) => (
+                    <Text key={cellIndex} style={styles.dataCell}>
+                      {cell}
+                    </Text>
+                  ))}
+                </TouchableOpacity>
+              );
+            })}
         </View>
       </ScrollView>
       <Modal

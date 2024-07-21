@@ -5,7 +5,7 @@ import SearchForm from "@/components/SearchForm";
 import TimeDivider from "@/components/reportInquire/TimeDivider";
 import ReportItem from "@/components/reportInquire/ReportItem";
 import DateSet from "@/components/reportInquire/DateSet";
-import { getReportListAll } from "@/api/reportApi";
+import { getReportListAll, getReportListUser } from "@/api/reportApi";
 import ReportItemUser from "./ReportItemUser";
 
 const JsonData = [
@@ -78,31 +78,64 @@ const groupDataByDateAndHour = (data: ReportData[]): GroupedData => {
     }, {});
 };
 
+const getTodayDate = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 +1
+  const day = String(today.getDate()).padStart(2, "0"); // 날짜를 두 자리로 맞춤
+
+  return `${year}-${month}-${day}`;
+};
+
 export default function UserReportInquire() {
   const [data, setData] = useState<ReportData[]>(JsonData);
+  const [date, setDate] = useState<{
+    startDate: string;
+    endDate: string;
+  }>({
+    startDate: getTodayDate(),
+    endDate: getTodayDate(),
+  });
 
+const fetchReportListUser = async () => {
+  try {
+    const response = await getReportListUser(date.startDate, date.endDate);
+    // API 응답을 ReportData 형식에 맞게 변환
+    const formattedData: ReportData[] = response.map((item: any) => ({
+      createdTime: item.createdTime,
+      bpm: Number(item.bpm),
+      gps: String(item.gps),
+      flag: String(item.flag),
+      flagInfo: {
+        name: String(item.flagInfo?.name || ""),
+        gender: String(item.flagInfo?.gender || ""),
+        workArea: String(item.flagInfo?.workArea || ""),
+        department: String(item.flagInfo?.department || ""),
+        status: String(item.flagInfo?.status || ""),
+      },
+    }));
+    setData(formattedData);
+  } catch (error) {
+    console.error("Failed to fetch user Info", error);
+  }
+};
   useEffect(() => {
-    const fetchReportListAll = async () => {
-      try {
-        const response = await getReportListAll();
-        setData(response);
-      } catch (error) {
-        console.error("Failed to fetch user Info", error);
-      }
-    };
-    // fetchReportListAll();
-  }, []);
+    fetchReportListUser();
+  }, [date]);
 
   const groupedData = useMemo(() => groupDataByDateAndHour(data), [data]);
 
+
   const handleDate = (startDate: string | null, endDate: string | null) => {
-    console.log("startDate:", startDate, "endDate:", endDate);
-    // 여기에 날짜 필터링 로직을 구현하세요
+    if (startDate && !endDate) {
+      setDate({ startDate: startDate, endDate: "" });
+    } else if (startDate && endDate) {
+      setDate({ startDate: startDate, endDate: endDate });
+    }
   };
 
   const handleSearchClick = (input: string, typeValue?: string) => {
     console.log("Search Text:", input, "Search typeValue:", typeValue);
-    // 여기에 검색 로직을 구현하세요
   };
 
   return (
