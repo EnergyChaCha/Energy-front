@@ -17,7 +17,7 @@ import Colors from "@/constants/Colors";
 import CustomTextInput from "@/components/CustomTextInput";
 import { RootStackParamList } from "./signupType";
 
-const SignUpPersonalScreen = () => {
+const SignUpPersonal = () => {
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -61,11 +61,10 @@ const SignUpPersonalScreen = () => {
       Alert.alert("생년월일을 8자로 입력해주세요.");
       return;
     }
-      const formattedBirth = `${form.birthdate.substring(
-        0,
-        4
-      )}-${form.birthdate.substring(4, 6)}-${form.birthdate.substring(6, 8)}`;
-
+    const formattedBirth = `${form.birthdate.substring(
+      0,
+      4
+    )}-${form.birthdate.substring(4, 6)}-${form.birthdate.substring(6, 8)}`;
 
     navigation.navigate("auth/signUpWork", {
       signUpData,
@@ -78,7 +77,6 @@ const SignUpPersonalScreen = () => {
       },
     });
   };
-
 
   return (
     <View style={styles.container}>
@@ -162,4 +160,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUpPersonalScreen;
+export default SignUpPersonal;

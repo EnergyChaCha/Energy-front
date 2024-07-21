@@ -4,9 +4,9 @@ import CustomTextInput from "@/components/CustomTextInput";
 import Colors from "@/constants/Colors";
 import { useNavigation } from "@react-navigation/native";
 import { hello, signIn } from "@/api/apiServices";
-import { getToken, saveToken } from "@/util/storage";
+import { getToken, saveToken, saveUserInfo } from "@/util/storage";
 
-const LoginScreen = () => {
+const Login = () => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -17,6 +17,9 @@ const LoginScreen = () => {
     try {
       const res = await signIn(id, password);
       saveToken(res.accessToken);
+      console.log(res.isAdmin);
+
+      await saveUserInfo(res.id, res.isAdmin);
       // const result = await getToken();
       // console.log("result ---------", result);
 
@@ -111,4 +114,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default Login;

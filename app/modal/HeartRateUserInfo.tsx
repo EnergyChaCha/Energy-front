@@ -57,6 +57,8 @@ const UserHeartInfo = () => {
     userData: WorkerData;
     userId: number;
   };
+  console.log(userId);
+  
 
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
@@ -97,7 +99,7 @@ const UserHeartInfo = () => {
       }
     };
 
-    // fetchHeartRateData();
+    fetchHeartRateData();
     // fetchUserData();
   }, [userId]);
 
@@ -113,6 +115,8 @@ const UserHeartInfo = () => {
 
   const handleComplete = async () => {
     try {
+      console.log("userId--", userId);
+      
       const data = await putHeartRate(
         userId,
         parseInt(minHeartValue),

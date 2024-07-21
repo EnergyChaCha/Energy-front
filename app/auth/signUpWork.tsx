@@ -18,7 +18,7 @@ import CustomTextInput from "@/components/CustomTextInput";
 import { RootStackParamList } from "./signupType";
 import { signUp } from "@/api/authApi";
 
-const SignUpWorkScreen = () => {
+const SignUpWork = () => {
   const [form, setForm] = useState({
     department: "",
     workArea: "",
@@ -41,6 +41,8 @@ const SignUpWorkScreen = () => {
       ...personalData,
       ...form,
     };
+    console.log(fullData);
+    
     try {
       const response = await signUp(fullData);
       if (response) {
@@ -111,4 +113,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUpWorkScreen;
+export default SignUpWork;

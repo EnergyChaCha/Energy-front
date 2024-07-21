@@ -17,7 +17,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { getReportSearch, postReport } from "@/api/reportApi";
 
 interface UserInfo {
-  id: string;
+  id: number;
   name: string;
   phone: string;
   loginId: string;
@@ -64,12 +64,14 @@ const UserSearchForm = () => {
 
   const reportConfirmClick = async () => {
     try {
-      // const response = await postReport({
-      //   patientId: "",
-      //   status: 0,
-      //   latitude: 12.1,
-      //   longitude: 11.1,
-      // });
+      const response = await postReport({
+        patientId: selectedUser!.id,
+        status: userState == "기타" ? userStateOther : userState,
+        latitude: 12.1,
+        longitude: 11.1,
+      });
+      console.log(response);
+      
       setModalContent(true);
     } catch (error) {
       console.error("Report failed:", error);
@@ -152,7 +154,7 @@ const UserSearchForm = () => {
         <FlatList
           data={searchResults}
           renderItem={renderItem}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item, index) => index.toString()}
         />
       )}
 

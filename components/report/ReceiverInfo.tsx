@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import Colors from "@/constants/Colors";
 import CustomTextInput from "@/components/CustomTextInput";
 import { getReportMyInfo } from "@/api/reportApi";
+import { getUserID } from "@/util/storage";
 
 interface ReceiverInfo {
   id: string;
@@ -22,25 +23,24 @@ interface ReceiverInfo {
 
 function ReceiverInfo() {
   const [userInfo, setUserInfo] = useState<ReceiverInfo | null>(null);
-  const userId = 9;
 
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const data = await getReportMyInfo(userId);
+        const data = await getReportMyInfo(1);
         setUserInfo({
           id: data.id,
           name: data.name,
           phone: data.phone,
           workArea: data.workArea,
-          department: data.department
+          department: data.department,
         });
       } catch (error) {
         console.error("Failed to fetch user Info", error);
       }
     };
     fetchUserInfo();
-  }, [userId]);
+  }, []);
 
   return (
     <View style={styles.container}>

@@ -18,7 +18,7 @@ import CustomTextInput from "@/components/CustomTextInput";
 import { RootStackParamList } from "./signupType";
 import { signUpHealthInfo } from "@/api/authApi";
 
-const SignUpHealthScreen = () => {
+const SignUpHealth = () => {
   const [form, setForm] = useState({
     emergencyContact: "",
     emergencyContactRelation: "",
@@ -166,4 +166,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUpHealthScreen;
+export default SignUpHealth;

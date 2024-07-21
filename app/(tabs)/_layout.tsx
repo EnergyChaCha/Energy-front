@@ -1,17 +1,29 @@
 import React from "react";
-import { FontAwesome5, MaterialIcons, Octicons } from "@expo/vector-icons";
-import { Ionicons, AntDesign } from "@expo/vector-icons";
-
-import { Link, Tabs, useNavigation } from "expo-router";
-import { Pressable } from "react-native";
-
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Platform, StyleSheet, View, Text } from "react-native";
+import {
+  Ionicons,
+  AntDesign,
+  FontAwesome5,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
+import ReportInquire from "./ReportInquire";
+import HeartRateMonitoring from "./HeartRateMonitoring";
+import Report from "./Report";
+import Setting from "./Setting";
+import MemberManagement from "./MemberManagement";
+import { useNavigation } from "@react-navigation/native";
+
+const Tab = createBottomTabNavigator();
 
 export default function TabLayout() {
-  const navigation = useNavigation();
+  const isWeb = Platform.OS === "web";
+  const navigation = useNavigation(); // 네비게이션 객체 가져오기
+
   return (
-    <Tabs
-      screenOptions={{
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
         headerStyle: {},
         headerTitleStyle: {
           fontFamily: "notoSans7",
@@ -20,83 +32,73 @@ export default function TabLayout() {
         headerTintColor: Colors.navy,
         headerTitleAlign: "center",
         headerLeft: () => (
-          <Pressable onPress={() => (navigation as any).navigate("auth/login")}>
-            <Ionicons
-              name="arrow-back"
-              size={24}
-              color="#000000"
-              style={{ marginLeft: 15 }}
-            />
-          </Pressable>
+          <Ionicons
+            name="arrow-back"
+            size={24}
+            color="#000000"
+            style={{ marginLeft: 15 }}
+            onPress={() => {
+              navigation.navigate("auth/Login"); // 로그인 페이지로 이동
+            }}
+          />
         ),
-        headerRight: () => (
-          <Pressable
-            onPress={() => (navigation as any).navigate("Notifications")}
-          >
-            <Ionicons
-              name="notifications"
-              size={24}
-              color="#000000"
-              style={{ marginRight: 15 }}
-            />
-          </Pressable>
-        ),
-      }}
+        tabBarIcon: ({ color, size }) => {
+          switch (route.name) {
+            case "ReportInquire":
+              return (
+                <AntDesign name="notification" size={size} color={color} />
+              );
+            case "HeartRateMonitoring":
+              return (
+                <FontAwesome5 name="heartbeat" size={size} color={color} />
+              );
+            case "Report":
+              return <MaterialIcons name="sos" size={size} color={color} />;
+            case "Setting":
+              return <Ionicons name="settings" size={size} color={color} />;
+            case "MemberManagement":
+              return <Ionicons name="people" size={size} color={color} />;
+            default:
+              return null;
+          }
+        },
+      })}
     >
-      <Tabs.Screen
+      <Tab.Screen
         name="ReportInquire"
-        options={{
-          title: "신고이력",
-          tabBarIcon: ({ focused }) => (
-            <AntDesign
-              name="notification"
-              size={24}
-              color={focused ? Colors.blue : Colors.navy}
-            />
-          ),
-        }}
+        component={ReportInquire}
+        options={{ title: "신고이력" }}
       />
-      <Tabs.Screen
+      <Tab.Screen
         name="HeartRateMonitoring"
-        options={{
-          title: "심박수",
-          tabBarIcon: ({ focused }) => (
-            <FontAwesome5
-              name="heartbeat"
-              size={24}
-              color={focused ? Colors.blue : Colors.navy}
-            />
-          ),
-        }}
+        component={HeartRateMonitoring}
+        options={{ title: "심박수" }}
       />
-
-      <Tabs.Screen
+      <Tab.Screen
         name="Report"
-        options={{
-          title: "Report",
-          tabBarIcon: ({ focused }) => (
-            <MaterialIcons
-              name="sos"
-              size={24}
-              color={focused ? Colors.blue : Colors.navy}
-            />
-          ),
-        }}
+        component={Report}
+        options={{ title: "Report" }}
       />
-
-      <Tabs.Screen
+      <Tab.Screen
         name="Setting"
-        options={{
-          title: "설정",
-          tabBarIcon: ({ focused }) => (
-            <Ionicons
-              name="settings"
-              size={24}
-              color={focused ? Colors.blue : Colors.navy}
-            />
-          ),
-        }}
+        component={Setting}
+        options={{ title: "설정" }}
       />
-    </Tabs>
+      {isWeb && (
+        <Tab.Screen
+          name="MemberManagement"
+          component={MemberManagement}
+          options={{ title: "회원 관리" }}
+        />
+      )}
+    </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});

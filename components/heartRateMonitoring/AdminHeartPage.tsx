@@ -14,7 +14,7 @@ import { useRoute } from "@react-navigation/native";
 
 const JsonData = [
   {
-    id: 9,
+    id: 6,
     name: "김*원",
     phone: "010-****-4567",
     loginId: "abd**",
@@ -26,7 +26,7 @@ const JsonData = [
     heartrateStatus: "stability",
   },
   {
-    id: 8,
+    id: 5,
     name: "이*원",
     phone: "010-****-4567",
     loginId: "abd**",
@@ -43,12 +43,10 @@ export default function AdminHeartPage() {
   const [allData, setAllData] = useState(JsonData);
   const [showHelpModal, setShowHelpModal] = useState(false);
 
-  // useEffect(() => {
-  //   if (JsonData == null) return;
-  //   JsonData.forEach((element) => {
-  //     if(element.heartrateStatus)
-  //   });
-  // }, [JsonData]);
+  useEffect(() => {
+    if (JsonData == null) return;
+    setAllData(JsonData);
+  }, []);
 
   const routes = [
     { key: "all", title: "전체" },

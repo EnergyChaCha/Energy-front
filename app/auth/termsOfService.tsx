@@ -10,7 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import Colors from "@/constants/Colors";
 import IconButton from "@/components/IconButton";
 
-const TermsOfServiceScreen = () => {
+const TermsOfService = () => {
   const [agreement, setAgreement] = useState({
     terms: false,
     privacy: false,
@@ -210,4 +210,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TermsOfServiceScreen;
+export default TermsOfService;

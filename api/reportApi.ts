@@ -68,8 +68,8 @@ export const getReportSearch = async (name: string, workArea: string) => {
 };
 
 interface ReportData {
-  patientId: string;
-  status: number;
+  patientId: number;
+  status: string;
   latitude: Double;
   longitude: Double;
 }
@@ -77,7 +77,7 @@ interface ReportData {
 // 코드만 추가해둠
 export const postReport = async (data: ReportData) => {
   try {
-    const response = await api.post("/report/other", data);
+    const response = await api.post("/report/", data);
     return response.data;
   } catch (error) {
     console.error("Error posting report:", error);
