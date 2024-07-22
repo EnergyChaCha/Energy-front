@@ -20,7 +20,11 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+<<<<<<< HEAD
       "package": "com.wldnjs35242.Frontend"
+=======
+      "package": "chacha.enerygy.ganghannal"
+>>>>>>> feat/정은/Wearable-Data-Layer-API-추가
     },
     "web": {
       "bundler": "metro",
