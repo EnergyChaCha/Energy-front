@@ -27,7 +27,9 @@ function ReceiverInfo() {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const data = await getReportMyInfo(1);
+        const userId = await getUserID();
+        if (userId == undefined) return;
+        const data = await getReportMyInfo(parseInt(userId));
         setUserInfo({
           id: data.id,
           name: data.name,

@@ -114,8 +114,6 @@ const UserHeartInfo = () => {
     ) => {
       try {
         const data = await getHeartRateChart(userId, start, end);
-        console.log("#####", data);
-        
         setHeartRateChart(data);
       } catch (error) {
         console.error("Failed to fetch user data", error);

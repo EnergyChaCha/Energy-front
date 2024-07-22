@@ -12,16 +12,6 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-const JsonData = {
-  ReceiverInfo: {
-    id: "worker_uuid_1",
-    name: "김지원",
-    phone: "010-1222-4567",
-    workArea: "안성 HUB",
-    department: "상차",
-  },
-};
-
 export default function Report() {
   const [next, setNext] = useState(false);
 
