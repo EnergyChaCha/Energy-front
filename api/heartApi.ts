@@ -37,3 +37,25 @@ export const getHeartRateDetail = async (memberID: number) => {
     console.error(error);
   }
 };
+
+// HI-03: 관리자가 리스트에서 클릭했을때 해당 회원의 심박수 상세 정보 조회
+export const getHeartRateChart = async (memberID: number, start:string, end:string) => {
+  try {
+    const response = await api.get(
+      `/heartrate/${memberID}?start=${start}&end=${end}&interval=24`
+    );
+    return response.data.result;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// HI-04: 사용자 심박수 통계 조회
+export const getHeartUserInfo = async (memberID: number, start:string, end:string) => {
+  try {
+    const response = await api.get(`/heartrate/statistics/${memberID}?start=${start}&end=${end}`);
+    return response.data.result;
+  } catch (error) {
+    console.error(error);
+  }
+};

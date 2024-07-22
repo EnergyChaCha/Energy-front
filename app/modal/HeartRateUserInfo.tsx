@@ -13,7 +13,12 @@ import Colors from "@/constants/Colors";
 import moment from "moment";
 import HeartRateChart from "@/components/heartRateMonitoring/HeartRateChart";
 import { useRoute } from "@react-navigation/native";
-import { getHeartRate, getHeartRateDetail, putHeartRate } from "@/api/heartApi";
+import {
+  getHeartRate,
+  getHeartRateChart,
+  getHeartRateDetail,
+  putHeartRate,
+} from "@/api/heartApi";
 
 interface WorkerData {
   id: number;
@@ -39,6 +44,13 @@ interface UserInfo {
   department: string;
 }
 
+interface chartType {
+  date: string;
+  minimumBpm: number;
+  maximumBpm: number;
+  averageBpm: number;
+}
+
 const statusMap: { [key: string]: string } = {
   emergency: "위기",
   caution: "주의",
@@ -60,6 +72,7 @@ const UserHeartInfo = () => {
   console.log(userId);
 
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const [heartRateChart, setHeartRateChart] = useState<chartType[]>([]);
 
   const [minHeartValue, setMinHeartValue] = useState("0");
   const [maxHeartValue, setMaxHeartValue] = useState("0");
@@ -94,19 +107,39 @@ const UserHeartInfo = () => {
       }
     };
 
+    const fetchHeartChart = async (
+      userId: number,
+      start: string,
+      end: string
+    ) => {
+      try {
+        const data = await getHeartRateChart(userId, start, end);
+        console.log("#####", data);
+        
+        setHeartRateChart(data);
+      } catch (error) {
+        console.error("Failed to fetch user data", error);
+      }
+    };
+
     fetchHeartRateData();
     // fetchUserData();
+    fetchHeartChart(
+      userId,
+      moment().subtract(7, "days").format("YYYY-MM-DD"),
+      moment().format("YYYY-MM-DD")
+    );
   }, [userId]);
 
-  const heartRateData = [
-    { date: "0", minBpm: 30, maxBpm: 200, averageBpm: 89 },
-    { date: "1", minBpm: 40, maxBpm: 120, averageBpm: 89 },
-    { date: "2", minBpm: 60, maxBpm: 110, averageBpm: 89 },
-    { date: "3", minBpm: 55, maxBpm: 100, averageBpm: 89 },
-    { date: "4", minBpm: 56, maxBpm: 120, averageBpm: 89 },
-    { date: "5", minBpm: 80, maxBpm: 130, averageBpm: 89 },
-    { date: "6", minBpm: 90, maxBpm: 160, averageBpm: 89 },
-  ];
+  // const heartRateData = [
+  //   { date: "0", minBpm: 30, maxBpm: 200, averageBpm: 89 },
+  //   { date: "1", minBpm: 40, maxBpm: 120, averageBpm: 89 },
+  //   { date: "2", minBpm: 60, maxBpm: 110, averageBpm: 89 },
+  //   { date: "3", minBpm: 55, maxBpm: 100, averageBpm: 89 },
+  //   { date: "4", minBpm: 56, maxBpm: 120, averageBpm: 89 },
+  //   { date: "5", minBpm: 80, maxBpm: 130, averageBpm: 89 },
+  //   { date: "6", minBpm: 90, maxBpm: 160, averageBpm: 89 },
+  // ];
 
   const handleComplete = async () => {
     try {
@@ -169,7 +202,7 @@ const UserHeartInfo = () => {
         </Text>
       </Text>
 
-      <HeartRateChart data={heartRateData} />
+      <HeartRateChart data={heartRateChart} />
 
       <View style={styles.bpmSection}>
         <Text style={styles.title}>심박수 임계치 설정</Text>

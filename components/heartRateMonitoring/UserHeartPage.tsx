@@ -1,43 +1,67 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { View, Text, StyleSheet, ScrollView, TextInput } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import moment from "moment";
 import HeartRateChart from "@/components/heartRateMonitoring/HeartRateChart";
+import { getHeartRateChart, getHeartUserInfo } from "@/api/heartApi";
+import { getUserID } from "@/util/storage";
+
+interface chartType {
+  date: string;
+  minimumBpm: number;
+  maximumBpm: number;
+  averageBpm: number;
+}
 
 const UserHeartPage = () => {
+  const [heartRateChart, setHeartRateChart] = useState<chartType[]>([]);
+  const [userInfo, setUserInfo] = useState<{
+    averageThreshold: number;
+    maxBpmThreshold: number;
+    minBpmThreshold: number;
+  }>({
+    averageThreshold: 0,
+    maxBpmThreshold: 0,
+    minBpmThreshold: 0,
+  });
+
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchUserData = async (start: string, end: string) => {
       try {
-        // const data = await getHeartRateDetail(userId);
-        // setUserInfo({
-        //   name: data.name,
-        //   birthdate: data.birthdate,
-        //   gender: data.gender,
-        //   status: data.status,
-        //   phone: data.phone,
-        //   loginId: data.loginId,
-        //   workArea: data.workArea,
-        //   department: data.department,
-        // });
+        const userId = await getUserID();
+        if (userId == undefined) return;
+        const data = await getHeartUserInfo(parseInt(userId), start, end);
+        
+        setUserInfo({
+          averageThreshold: data[0].averageThreshold,
+          maxBpmThreshold: data[0].maxBpmThreshold,
+          minBpmThreshold: data[0].minBpmThreshold,
+        });
+      } catch (error) {
+        console.error("Failed to fetch user data", error);
+      }
+    };
+    const fetchHeartRateData = async (start: string, end: string) => {
+      try {
+        const userId = await getUserID();
+        if (userId == undefined) return;
+        const data = await getHeartRateChart(parseInt(userId), start, end);
+        setHeartRateChart(data);
       } catch (error) {
         console.error("Failed to fetch user data", error);
       }
     };
 
-    // fetchHeartRateData();
-    // fetchUserData();
+    fetchHeartRateData(
+      moment().subtract(7, "days").format("YYYY-MM-DD"),
+      moment().format("YYYY-MM-DD")
+    );
+    fetchUserData(
+      moment().subtract(7, "days").format("YYYY-MM-DD"),
+      moment().format("YYYY-MM-DD")
+    );
   }, []);
-
-  const heartRateData = [
-    { date: "0", minBpm: 30, maxBpm: 200, averageBpm: 89 },
-    { date: "1", minBpm: 40, maxBpm: 120, averageBpm: 89 },
-    { date: "2", minBpm: 60, maxBpm: 110, averageBpm: 89 },
-    { date: "3", minBpm: 55, maxBpm: 100, averageBpm: 89 },
-    { date: "4", minBpm: 56, maxBpm: 120, averageBpm: 89 },
-    { date: "5", minBpm: 80, maxBpm: 130, averageBpm: 89 },
-    { date: "6", minBpm: 90, maxBpm: 160, averageBpm: 89 },
-  ];
 
   return (
     <ScrollView style={styles.container}>
@@ -49,28 +73,30 @@ const UserHeartPage = () => {
           {moment().format("YYYY.MM.DD")}
         </Text>
       </Text>
-      <HeartRateChart data={heartRateData} />
+      <HeartRateChart data={heartRateChart} />
 
       <Text style={[styles.title, { marginTop: 50 }]}>심박수 통계</Text>
       <View style={styles.statisticsContainer}>
         <View style={styles.statistics}>
           <Text style={styles.subTitle}>평균</Text>
           <View style={styles.bpm}>
-            <Text style={styles.bpmNumber}>132</Text>
+            <Text style={styles.bpmNumber}>
+              {Math.round(userInfo.averageThreshold)}
+            </Text>
             <Text style={styles.bpmText}>BPM</Text>
           </View>
         </View>
         <View style={styles.statistics}>
           <Text style={styles.subTitle}>최소</Text>
           <View style={styles.bpm}>
-            <Text style={styles.bpmNumber}>132</Text>
+            <Text style={styles.bpmNumber}>{userInfo.minBpmThreshold}</Text>
             <Text style={styles.bpmText}>BPM</Text>
           </View>
         </View>
         <View style={styles.statistics}>
           <Text style={styles.subTitle}>최대</Text>
           <View style={styles.bpm}>
-            <Text style={styles.bpmNumber}>132</Text>
+            <Text style={styles.bpmNumber}>{userInfo.maxBpmThreshold}</Text>
             <Text style={styles.bpmText}>BPM</Text>
           </View>
         </View>

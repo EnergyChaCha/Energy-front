@@ -1,16 +1,17 @@
 import Colors from "@/constants/Colors";
+import moment from "moment";
 import React from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 
-interface HeartRateData {
+interface chartType {
   date: string;
-  minBpm: number;
-  maxBpm: number;
+  minimumBpm: number;
+  maximumBpm: number;
   averageBpm: number;
 }
 
 interface HeartRateChartProps {
-  data: HeartRateData[];
+  data: chartType[];
 }
 
 const CHART_HEIGHT = 150;
@@ -36,16 +37,16 @@ function HeartRateChart({ data }: HeartRateChartProps) {
       </View>
       <View style={styles.chart}>
         {data.map((item, index) => {
-          const maxY = normalizeY(item.maxBpm);
-          const minY = normalizeY(item.minBpm);
-          const avgY = normalizeY(item.averageBpm);
+          const maxY = normalizeY(item.maximumBpm);
+          const minY = normalizeY(item.minimumBpm);
+          const avgY = normalizeY(Math.round(item.averageBpm));
 
           return (
             <View key={index} style={styles.dataColumn}>
               <View style={[styles.backLine, { height: "100%" }]} />
 
               <Text style={[styles.maxMinValue, { top: maxY - 5, right: -8 }]}>
-                {item.maxBpm}
+                {item.maximumBpm}
               </Text>
               <View
                 style={[styles.dataLine, { top: maxY, height: minY - maxY }]}
@@ -54,13 +55,15 @@ function HeartRateChart({ data }: HeartRateChartProps) {
 
               <View style={[styles.dataPoint, { top: minY }]} />
               <Text style={[styles.maxMinValue, { top: minY - 5, right: -3 }]}>
-                {item.minBpm}
+                {item.minimumBpm}
               </Text>
               <View style={[styles.avgPoint, { top: avgY }]} />
-              <Text style={[styles.avgValue, { top: avgY - 5, right: -3 }]}>
-                {item.averageBpm}
+              <Text style={[styles.avgValue, { top: avgY - 3, right: -8 }]}>
+                {Math.round(item.averageBpm)}
               </Text>
-              <Text style={styles.xAxisLabel}>{item.date}</Text>
+              <Text style={styles.xAxisLabel}>
+                {moment(item.date).format("MM-DD")}
+              </Text>
             </View>
           );
         })}
@@ -73,6 +76,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     height: CHART_HEIGHT + 10,
+    marginRight:10
   },
   yAxis: {
     justifyContent: "space-between",
