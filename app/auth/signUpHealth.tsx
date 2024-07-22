@@ -16,9 +16,10 @@ import {
 import Colors from "@/constants/Colors";
 import CustomTextInput from "@/components/CustomTextInput";
 import { RootStackParamList } from "./signupType";
-import { signUpHealthInfo } from "@/api/authApi";
+import { signUp, signUpHealthInfo } from "@/api/authApi";
 
 const SignUpHealth = () => {
+  const [userId, setUserId] = useState<number>();
   const [form, setForm] = useState({
     emergencyContact: "",
     emergencyContactRelation: "",
@@ -55,11 +56,52 @@ const SignUpHealth = () => {
 
   const navigation = useNavigation<SignUpHealthNavigationProp>();
   const route = useRoute<SignUpWorkRouteProp>();
-  const { memberId } = route.params;
+  const { signUpData, personalData, workData } = route.params;
+
+  const fetchSignUP = async () => {
+    var fullData = {
+      ...signUpData,
+      ...personalData,
+      ...workData,
+    };
+
+    try {
+      const signupResponse = await signUp(fullData);
+      console.log("signupResponse", signupResponse);
+      console.log("signupResponse", signupResponse.id);
+
+      const res = await signUpHealthInfo(signupResponse.id, form);
+
+      return res;
+    } catch (error) {
+      console.error(error);
+      Alert.alert("회원가입 중 오류가 발생했습니다.");
+    }
+  };
+
+  // const fetchHealtyInfo = async () => {
+  //   if(!userId) return false;
+
+  //   try {
+  //     console.log("userId", userId);
+
+  //     if (response) {
+  //       setUserId(response);
+  //       console.log("response", response);
+  //     }
+
+  //     else Alert.alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+  //   } catch (error) {
+  //     console.error(error);
+  //     Alert.alert("회원가입 중 오류가 발생했습니다.");
+  //   }
+  // };
+
   const handleSignUp = async () => {
     try {
-      const response = await signUpHealthInfo(memberId, form);
-      if (response) {
+      const res = await fetchSignUP();
+      // const response = await fetchHealtyInfo();
+      if (res) {
         navigation.navigate("auth/login");
       } else {
         Alert.alert("회원 가입에 실패했습니다. 다시 시도해주세요.");

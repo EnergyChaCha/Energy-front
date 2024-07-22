@@ -13,6 +13,19 @@ export type RootStackParamList = {
       address: string;
     };
   };
-  "auth/signUpHealth": { memberId: string };
-  "auth/login":undefined;
+  "auth/signUpHealth": {
+    signUpData: { loginId: string; password: string };
+    personalData: {
+      name: string;
+      phone: string;
+      birthdate: string;
+      gender: boolean;
+      address: string;
+    };
+    workData: {
+      department: string;
+      workArea: string;
+    };
+  };
+  "auth/login": undefined;
 };

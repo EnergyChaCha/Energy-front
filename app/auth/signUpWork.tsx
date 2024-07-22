@@ -36,26 +36,17 @@ const SignUpWork = () => {
   const { signUpData, personalData } = route.params;
 
   const handleSignUp = async () => {
-    var fullData = {
-      ...signUpData,
-      ...personalData,
-      ...form,
-    };
-    console.log(fullData);
-    
-    try {
-      const response = await signUp(fullData);
-      if (response) {
-        console.log(response);
-        navigation.navigate("auth/signUpHealth", { memberId: response });
-      } else {
-        Alert.alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+
+    navigation.navigate("auth/signUpHealth", {
+      signUpData,
+      personalData,
+      workData:{
+        department: form.workArea,
+        workArea: form.department,
       }
-    } catch (error) {
-      console.error(error);
-      Alert.alert("회원가입 중 오류가 발생했습니다.");
-    }
+    });    
   };
+
 
   return (
     <View style={styles.container}>

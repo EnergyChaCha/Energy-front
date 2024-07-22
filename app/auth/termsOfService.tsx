@@ -5,6 +5,7 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "@/constants/Colors";
@@ -24,7 +25,11 @@ const TermsOfService = () => {
   const navigation = useNavigation();
 
   const handleSignUp = () => {
-    (navigation as any).navigate("auth/signUpAccount");
+    if (agreement.location && agreement.privacy && agreement.terms) {
+      (navigation as any).navigate("auth/signUpAccount");
+    } else {
+      Alert.alert("이용약관에 모두 동의해주세요.");
+    }
   };
 
   return (
@@ -135,7 +140,15 @@ const TermsOfService = () => {
         </View>
       </ScrollView>
 
-      <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+      <TouchableOpacity
+        style={[
+          styles.button,
+          agreement.location &&
+            agreement.privacy &&
+            agreement.terms && { backgroundColor: Colors.blue },
+        ]}
+        onPress={handleSignUp}
+      >
         <Text style={styles.buttonText}>다음</Text>
       </TouchableOpacity>
     </View>
@@ -165,7 +178,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   button: {
-    backgroundColor: Colors.blue,
+    backgroundColor: "#a7a7a7",
     padding: 10,
     borderRadius: 5,
     alignItems: "center",

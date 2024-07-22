@@ -29,6 +29,8 @@ interface SignInData {
 export const signUp = async (signUpdata: SignUpData) => {
   try {
     const response = await api.post("/auth/signup", signUpdata);
+    console.log(response);
+    
     return response.data.result;
   } catch (error) {
     console.log(error);
@@ -36,7 +38,7 @@ export const signUp = async (signUpdata: SignUpData) => {
 };
 
 export const signUpHealthInfo = async (
-  memberId: string,
+  memberId: number,
   signUpHealthData: SignUpHealthData
 ) => {
   try {
@@ -50,13 +52,13 @@ export const signUpHealthInfo = async (
   }
 };
 
-export const signIn = async (adminId: string, adminPw: string) => {
+export const signIn = async (loginId: string, password: string) => {
   try {
     const response = await api.post("/auth/signin", {
-      adminId: `${adminId}`,
-      adminPw: `${adminPw}`,
+      loginId: `${loginId}`,
+      password: `${password}`,
     });
-    return response;
+    return response.data.result;
   } catch (error) {
     console.log(error);
   }

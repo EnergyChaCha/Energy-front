@@ -3,8 +3,8 @@ import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
 import CustomTextInput from "@/components/CustomTextInput";
 import Colors from "@/constants/Colors";
 import { useNavigation } from "@react-navigation/native";
-import { hello, signIn } from "@/api/apiServices";
 import { getToken, saveToken, saveUserInfo } from "@/util/storage";
+import { signIn } from "@/api/authApi";
 
 const Login = () => {
   const [id, setId] = useState("");
