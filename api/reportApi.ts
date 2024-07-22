@@ -2,10 +2,12 @@ import { Double } from "react-native/Libraries/Types/CodegenTypes";
 import api from "./axiosConfig";
 
 // RI-01: 신고이력 전체 조회
-export const getReportListAll = async () => {
+export const getReportListAll = async (start:string, end:string) => {
   try {
-    const response = await api.get("/report/all");
-    return response.data.result.list;
+    const response = await api.get(
+      `/report/all?start=${start}&end=${end}&loginId=&page=0&size=200`
+    );
+    return response.data.result.content;
   } catch (error) {
     console.log(error);
   }

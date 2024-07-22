@@ -7,6 +7,7 @@ import TimeDivider from "@/components/reportInquire/TimeDivider";
 import ReportItem from "@/components/reportInquire/ReportItem";
 import DateSet from "@/components/reportInquire/DateSet";
 import { getReportListAll } from "@/api/reportApi";
+import moment from "moment";
 
 const JsonData = [
   {
@@ -81,9 +82,10 @@ interface Reporter {
 
 interface ReportData {
   id: string;
-  gps: string;
+  latitude: string;
+  longitude: string;
+  bpm: string;
   createdTime: string;
-  checked: string;
   patient: Patient;
   reporter: Reporter;
 }
@@ -120,18 +122,21 @@ const groupDataByDateAndHour = (data: ReportData[]): GroupedData => {
 };
 
 export default function AdminReportInquire() {
-  const [data, setData] = useState<ReportData[]>(JsonData);
+  const [data, setData] = useState<ReportData[]>([]);
 
+  const fetchReportListAll = async (start:string, end:string) => {
+    try {
+      const response = await getReportListAll(start, end);
+      setData(response);
+    } catch (error) {
+      console.error("Failed to fetch user Info", error);
+    }
+  };
   useEffect(() => {
-    const fetchReportListAll = async () => {
-      try {
-        const response = await getReportListAll();
-        setData(response);
-      } catch (error) {
-        console.error("Failed to fetch user Info", error);
-      }
-    };
-    // fetchReportListAll();
+    fetchReportListAll(
+      moment().format("YYYY-MM-DD"),
+      moment().format("YYYY-MM-DD")
+    );
   }, []);
 
   const groupedData = useMemo(() => groupDataByDateAndHour(data), [data]);
@@ -139,6 +144,7 @@ export default function AdminReportInquire() {
   const handleDate = (startDate: string | null, endDate: string | null) => {
     console.log("startDate : ", startDate);
     console.log("endDate : ", endDate);
+    fetchReportListAll(startDate!, endDate!);
   };
 
   const handleSearchClick = (input: string, typeValue?: string) => {
@@ -157,7 +163,7 @@ export default function AdminReportInquire() {
       />
       <DateSet handleDate={handleDate} />
 
-      <View style={styles.scrollView}>
+      <ScrollView style={styles.scrollView}>
         {Object.entries(groupedData).map(([date, hourGroups]) => (
           <React.Fragment key={date}>
             <TimeDivider date={date} />
@@ -170,7 +176,7 @@ export default function AdminReportInquire() {
             ))}
           </React.Fragment>
         ))}
-      </View>
+      </ScrollView>
     </View>
   );
 }

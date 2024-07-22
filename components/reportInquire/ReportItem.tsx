@@ -28,13 +28,13 @@ interface Reporter {
 
 interface ReportData {
   id: string;
-  gps: string;
+  latitude: string;
+  longitude: string;
+  bpm: string;
   createdTime: string;
-  checked: string;
   patient: Patient;
   reporter: Reporter;
 }
-
 
 interface ReportItemProps {
   time: string;
@@ -54,18 +54,15 @@ function ReportItem({ time, list }: ReportItemProps) {
         setShowReportModal(true);
       }}
     >
-      <Text style={styles.itemGPSText}>{item.gps}</Text>
-      <Text style={styles.itemBPMText}>129 BPM (신고 시 심박수)</Text>
+      <Text style={[styles.itemGPSText, {marginBottom:0}]}>위도 {item.latitude}</Text>
+      <Text style={styles.itemGPSText}>경도 {item.longitude}</Text>
+      <Text style={styles.itemBPMText}>{item.bpm} BPM (신고 시 심박수)</Text>
       <Text style={styles.itemInfoText}>
         환자 : {item.patient.loginId} / {item.patient.name} /{" "}
         {item.patient.phone} {"\n"}
         접수자 : {item.reporter.loginId} / {item.reporter.name} /{" "}
         {item.reporter.phone}
       </Text>
-      <TouchableOpacity style={styles.checkboxContainer}>
-        <AntDesign name="checkcircleo" size={24} color="black" />
-        <Text style={styles.iconText}>{item.checked}</Text>
-      </TouchableOpacity>
     </TouchableOpacity>
   );
 
