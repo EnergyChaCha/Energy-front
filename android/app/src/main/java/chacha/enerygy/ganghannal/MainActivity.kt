@@ -26,20 +26,20 @@ class MainActivity : ReactActivity() {
       Log.i("메시지", "메인액티비티")
     super.onCreate(null)
 
-      val intent = Intent(this, WearableListenerService::class.java)
-//      ContextCompat.startForegroundService(this, intent)
-      startService(intent)
-      Log.i("메시지", "서비스 시작")
-
-      val wearableListenerService = WearableListenerService()
-      wearableListenerService.sayHello()
+//      val intent = Intent(this, WearableListenerService::class.java)
+////      ContextCompat.startForegroundService(this, intent)
+//      startService(intent)
+//      Log.i("메시지", "서비스 시작")
+//
+//      val wearableListenerService = WearableListenerService()
+//      wearableListenerService.sayHello()
 
 
       Wearable.getMessageClient(this).addListener { event ->
           val dataString = String(event.data, Charsets.UTF_8)
           val gson = Gson()
 //          val dataObject = gson.fromJson(dataString, Hello::class.java)
-          Log.i("메시지", "앱 메시지 받음: ${event.path}")
+//          Log.i("메시지", "앱 메시지 받음: ${event.path}")
           sendEventToReactNative("CustomEvent", event.path, dataString )
       }
 
@@ -51,7 +51,7 @@ class MainActivity : ReactActivity() {
         val reactContext: ReactContext? = reactInstanceManager?.currentReactContext
         if (reactContext != null && reactContext.hasActiveCatalystInstance()) {
             // 네이티브 모듈의 메서드를 통해 이벤트 전송
-            Log.i("메시지", "리액트로 메시지 전송2")
+//            Log.i("메시지", "리액트로 메시지 전송2")
             val myNativeModule = reactContext
                 .getNativeModule(WearableModule::class.java)
             val gson = Gson()

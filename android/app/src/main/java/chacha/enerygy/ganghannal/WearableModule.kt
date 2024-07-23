@@ -32,29 +32,11 @@ class WearableModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
 // 리스너 제거 (필요한 경우)
     }
 
-//    fun sendMessage(path: String, message: String){
-//        val data = Hello(message)
-//        val gson = Gson()
-//        val dataJson = gson.toJson(data)
-//        val sendData = dataJson.toByteArray(Charsets.UTF_8)
-//
-//        CoroutineScope(Dispatchers.Default).launch {
-//            try {
-//                val nodes = Tasks.await(nodeClient.connectedNodes)
-//                nodes.forEach { node ->
-//                    val result = Tasks.await(messageClient.sendMessage(node.id, path, sendData))
-//                    Log.i("메시지 보내기 1", message.toString())
-//                }
-//            } catch (e: Exception) {
-//                Log.i("메시지 보내기 1 에러", e.message.toString())
-//            }
-//        }
-//
-//    }
+
 
     @ReactMethod
     fun sendMessageToWear(path: String, message: String, promise: Promise) {
-        Log.i("메시지 리액트에서 워치로 보내기", message)
+//        Log.i("메시지 리액트에서 워치로 보내기", message)
         CoroutineScope(Dispatchers.Default).launch {
             try {
                 val nodes = Tasks.await(nodeClient.connectedNodes)

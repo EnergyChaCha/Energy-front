@@ -10,18 +10,12 @@ export default function Index() {
 
 
 
-const message = {
-    hello: "안녕 나는 리액트에서 보낸 메시지야"
-}
+// const message = {
+//     hello: "안녕 나는 리액트에서 보낸 메시지야"
+// }
 
-// sendMessageToWear("/hello-react-wear", '{"order": "HELLO", "data": "안녕 나는 리액트에서 보낸 메시지야"}')
-sendMessageToWear("/hello-react-wear", JSON.stringify(message))
+// sendMessageToWear("/hello-react-wear", JSON.stringify(message))
 
 myNativeModuleEvents.addListener('CustomEvent', async (message) => {
-  console.log('리액트에서 메시지 받음:', message);
   handleEvent(message);
-  // sendMessageToWear("MESSAGE_FROM_REACT", JSON.stringify(message)) 
-  
 });
-
-console.log("시작8")

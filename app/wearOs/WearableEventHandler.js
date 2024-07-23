@@ -13,19 +13,6 @@ const paths = {
   MEMBER_INFO: "MEMBER_INFO"
 }
 
-// export const setupWearableListener = (onReceive) => {
-//     console.log("WearableListener 셋 한다!!")
-//   const subscription = wearEventEmitter.addListener('hello', (event) => {
-//     console.log('Received from Wear:', event);
-//     onReceive(event);
-//   });
-
-//   return () => {
-//     subscription.remove();
-//   };
-// };
-
-
 export const handleEvent = async(orderMessage) => {
   const message = JSON.parse(orderMessage)
   const path = message.path
@@ -34,7 +21,7 @@ export const handleEvent = async(orderMessage) => {
   console.log(`data: ${data}`)
   if (path == paths.POST_BPM) {
     try {
-      console.log(`심박수를 저장합니다: 심박수 ${data}`)
+      // console.log(`심박수를 저장합니다: 심박수 ${data}`)
       const res = await postBpm(Number(data));
 
     } catch (error) {
@@ -46,9 +33,9 @@ export const handleEvent = async(orderMessage) => {
   else if (path == paths.MEMBER_INFO) {
     try {
       const res = await getMyInfo();
-      console.log(`${paths.MEMBER_INFO} 리액트에서 보낼거야: ${JSON.stringify(res)}`)
+      // console.log(`${paths.MEMBER_INFO} 리액트에서 보낼거야: ${JSON.stringify(res)}`)
       if (!res) {
-        console.log("아직 로그인을 안 했어요")
+        // console.log("아직 로그인을 안 했어요")
         return
       }
       await sendMessageToWear(path, JSON.stringify(res))
