@@ -34,7 +34,8 @@ export const handleEvent = async(orderMessage) => {
   console.log(`data: ${data}`)
   if (path == paths.POST_BPM) {
     try {
-      const res = await postBpm(data);
+      console.log(`심박수를 저장합니다: 심박수 ${data}`)
+      const res = await postBpm(Number(data));
 
     } catch (error) {
       setErrorMessage("에러");
@@ -46,7 +47,11 @@ export const handleEvent = async(orderMessage) => {
     try {
       const res = await getMyInfo();
       console.log(`${paths.MEMBER_INFO} 리액트에서 보낼거야: ${JSON.stringify(res)}`)
-      sendMessageToWear(path, JSON.stringify(res))
+      if (!res) {
+        console.log("아직 로그인을 안 했어요")
+        return
+      }
+      await sendMessageToWear(path, JSON.stringify(res))
     } catch (error) {
       setErrorMessage("에러");
       console.log(error);
