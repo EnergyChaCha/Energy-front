@@ -20,7 +20,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.wldnjs35242.Frontend"
+      "package": "chacha.energy.ganghannal"
     },
     "web": {
       "bundler": "metro",

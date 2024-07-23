@@ -1,34 +1,48 @@
-// import { NativeModules, NativeEventEmitter } from "react-native";
+import { NativeModules, NativeEventEmitter } from 'react-native';
+import {sendMessageToWear, myNativeModuleEvents}  from './WearableModule';
+const { WearableModule } = NativeModules;
+const wearEventEmitter = new NativeEventEmitter(WearableModule);
 
-// const { WearableModule } = NativeModules;
-// const wearEventEmitter = new NativeEventEmitter(WearModule);
+import {postBpm, getMyInfo} from '../../api/wearOSApi'
 
-// useEffect(() => {
-//   const subscription = wearEventEmitter.addListener("WearRequest", (event) => {
-//     console.log("Received from Wear:", event);
-//     // 여기서 HTTP POST 요청을 수행
-//     performPostRequest(event.timestamp);
-//   });
+const paths = {
+  POST_BPM: "POST_BPM",
+  POST_REPORT: "POST_REPORT", 
+  GET_ALERT_LIST: "GET_ALERT_LIST", 
+  GET_REPORT_LIST: "GET_REPORT_LIST",
+  MEMBER_INFO: "MEMBER_INFO"
+}
 
-//   return () => {
-//     subscription.remove();
-//   };
-// }, []);
+export const handleEvent = async(orderMessage) => {
+  const message = JSON.parse(orderMessage)
+  const path = message.path
+  const data = message.data
+  console.log(`path: ${path}`)
+  console.log(`data: ${data}`)
+  if (path == paths.POST_BPM) {
+    try {
+      // console.log(`심박수를 저장합니다: 심박수 ${data}`)
+      const res = await postBpm(Number(data));
 
-// // 신고 post 요청을 해야함
-// const performPostRequest = async (timestamp) => {
-//   try {
-//     const response = await fetch("https://your-api-url.com/endpoint", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({ timestamp }),
-//     });
-//     const data = await response.json();
-//     console.log("POST request response:", data);
-//     // 필요한 경우 여기서 응답을 다시 WearOS로 보낼 수 있습니다
-//   } catch (error) {
-//     console.error("Error performing POST request:", error);
-//   }
-// };
+    } catch (error) {
+      setErrorMessage("에러");
+      console.log(error);
+    }
+  }
+
+  else if (path == paths.MEMBER_INFO) {
+    try {
+      const res = await getMyInfo();
+      // console.log(`${paths.MEMBER_INFO} 리액트에서 보낼거야: ${JSON.stringify(res)}`)
+      if (!res) {
+        // console.log("아직 로그인을 안 했어요")
+        return
+      }
+      await sendMessageToWear(path, JSON.stringify(res))
+    } catch (error) {
+      setErrorMessage("에러");
+      console.log(error);
+    }
+  }
+}
+
