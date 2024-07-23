@@ -64,9 +64,9 @@ export const signIn = async (loginId: string, password: string) => {
   }
 };
 
-export const hello = async () => {
+export const idCheck = async (id:string) => {
   try {
-    const response = await api.get("/hello");
+    const response = await api.get(`/auth/check/id?loginId=${id}`);
     return response.data.result;
   } catch (error) {
     console.log(error);

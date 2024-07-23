@@ -28,7 +28,7 @@ export const getReportListUser = async (start:string, end:string) => {
 // RI-05: 신고이력 상세 조회
 export const getReportListDetail = async (reportId: number) => {
   try {
-    const response = await api.get(`/report?report_id=${reportId}`);
+    const response = await api.get(`/report/?reportId=${reportId}`);
     return response.data.result;
   } catch (error) {
     console.error(error);

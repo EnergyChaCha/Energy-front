@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -12,46 +12,45 @@ import Colors from "@/constants/Colors";
 import ReportDetailPatient from "./ReportDetailPatient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ReportDetailReporter from "./ReportDetailReporter";
+import { getReportListAll, getReportListDetail } from "@/api/reportApi";
 
-const JsonDate = {
-  id: "report_uuid_1",
-  gps: "위도, 경도",
-  createdTime: "2024-06-20T10:22:22",
-  checked: "확인한 관리자 id",
-  patient: {
-    id: "target_uuid_1",
-    loginId: "chacha123",
-    name: "정으니",
-    gender: 0,
-    phone: "010-1234-1234",
-    workArea: "근무지",
-    department: "직무(상차)",
-    gps: "gps 정보",
-    status: "의식 없음",
-    address: "주소",
-    healthInfo: {
-      emergencyNumber: "응급연락처",
-      emergencyRelationship: "응급연락처관계",
-      disease: "기저질환",
-      allergy: "알레르기",
-      medication: "복용중인 약",
-      blood: "혈액형",
-      organDonor: 0,
-      bpm: "",
-    },
-  },
-  reporter: {
-    id: "reporter_uuid_1",
-    loginId: "chacha123",
-    name: "정으니",
-    gender: 0,
-    phone: "010-1234-1234",
-    department: "직무(상차)",
-    workArea: "근무지",
-  },
-};
+// const JsonDate = {
+//   id: "report_uuid_1",
+//   createdTime: "2024-06-20T10:22:22",
+//   patient: {
+//     id: "target_uuid_1",
+//     loginId: "chacha123",
+//     name: "정으니",
+//     gender: 0,
+//     phone: "010-1234-1234",
+//     workArea: "근무지",
+//     department: "직무(상차)",
+//     gps: "gps 정보",
+//     status: "의식 없음",
+//     address: "주소",
+//     healthInfo: {
+//       emergencyNumber: "응급연락처",
+//       emergencyRelationship: "응급연락처관계",
+//       disease: "기저질환",
+//       allergy: "알레르기",
+//       medication: "복용중인 약",
+//       blood: "혈액형",
+//       organDonor: 0,
+//       bpm: "",
+//     },
+//   },
+//   reporter: {
+//     id: "reporter_uuid_1",
+//     loginId: "chacha123",
+//     name: "정으니",
+//     gender: 0,
+//     phone: "010-1234-1234",
+//     department: "직무(상차)",
+//     workArea: "근무지",
+//   },
+// };
 
-interface HealthInfo {
+interface healthInfoDto {
   emergencyNumber: string;
   emergencyRelationship: string;
   disease: string;
@@ -63,17 +62,18 @@ interface HealthInfo {
 }
 
 interface Patient {
-  id: string;
+  id: number;
   loginId: string;
   name: string;
-  gender: number;
+  gender: boolean;
   phone: string;
   workArea: string;
   department: string;
-  gps: string;
+  latitude: number;
+  longitude: number;
   status: string;
   address: string;
-  healthInfo: HealthInfo;
+  healthInfoDto: healthInfoDto;
 }
 
 interface Reporter {
@@ -86,17 +86,39 @@ interface Reporter {
   workArea: string;
 }
 
-
 interface DateRangePickerProps {
   modalClose: () => void;
-  reportDataId: string;
+  reportDataId: number;
 }
 
 const ReportDetail: React.FC<DateRangePickerProps> = ({
   modalClose,
   reportDataId,
 }) => {
-  const [data, setData] = useState(JsonDate);
+  const [data, setData] = useState<{
+    id: number;
+    createdTime: string;
+    patient: Patient;
+    reporter: Reporter;
+  }>();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const data = await getReportListDetail(reportDataId);
+        setData({
+          id: data.id,
+          createdTime: data.createdTime,
+          patient: data.patient,
+          reporter: data.reporter,
+        });
+      } catch (error) {
+        console.error("Failed to fetch user data", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const layout = useWindowDimensions();
 
@@ -109,9 +131,18 @@ const ReportDetail: React.FC<DateRangePickerProps> = ({
   const renderScene = ({ route }: { route: { key: string } }) => {
     switch (route.key) {
       case "patient":
-        return <ReportDetailPatient patientData={data.patient} createdTime={data.createdTime}/>;
+        if (data && data.patient && data.createdTime) {
+          return (
+            <ReportDetailPatient
+              patientData={data.patient}
+              createdTime={data.createdTime}
+            />
+          );
+        }
       case "reporter":
-        return <ReportDetailReporter reporterData={data.reporter} />;
+        if (data && data.reporter) {
+          return <ReportDetailReporter reporterData={data.reporter} />;
+        }
       default:
         return null;
     }
@@ -184,9 +215,9 @@ const styles = StyleSheet.create({
   label: {
     color: Colors.navy,
     margin: 0,
-    fontFamily:"notoSans6",
-    fontSize:15,
-    lineHeight:20
+    fontFamily: "notoSans6",
+    fontSize: 15,
+    lineHeight: 20,
   },
   closeButton: {
     position: "absolute",

@@ -28,17 +28,9 @@ export const getHeartRate = async (memberID: number) => {
   }
 };
 
-// HI-03: 관리자가 리스트에서 클릭했을때 해당 회원의 심박수 상세 정보 조회
-export const getHeartRateDetail = async (memberID: number) => {
-  try {
-    const response = await api.get(`/heartrate/detail/?${memberID}`);
-    return response.data.content;
-  } catch (error) {
-    console.error(error);
-  }
-};
+//-------------------------------------------------------------------------------
 
-// HI-03: 관리자가 리스트에서 클릭했을때 해당 회원의 심박수 상세 정보 조회
+// HI-01: 회원별 심박수 그래프 조회
 export const getHeartRateChart = async (memberID: number, start:string, end:string) => {
   try {
     const response = await api.get(
@@ -49,6 +41,29 @@ export const getHeartRateChart = async (memberID: number, start:string, end:stri
     console.error(error);
   }
 };
+
+// HI-02: 관리자 심박수 전체 조회 
+export const getHeartRateAll = async (start:string, end:string) => {
+  try {
+    const response = await api.get(`/heartrate/all?start=${start}&end=${end}`);
+    return response.data.result;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+// HI-03: 관리자가 리스트에서 클릭했을때 해당 회원의 심박수 상세 정보 조회
+export const getHeartRateDetail = async (memberID: number) => {
+  try {
+    const response = await api.get(`/heartrate/detail/${memberID}`);
+    return response.data.result;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
 
 // HI-04: 사용자 심박수 통계 조회
 export const getHeartUserInfo = async (memberID: number, start:string, end:string) => {

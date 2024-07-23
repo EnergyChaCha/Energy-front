@@ -27,10 +27,10 @@ interface Reporter {
 }
 
 interface ReportData {
-  id: string;
-  latitude: string;
-  longitude: string;
-  bpm: string;
+  reportId: number;
+  latitude: number;
+  longitude: number;
+  bpm: number;
   createdTime: string;
   patient: Patient;
   reporter: Reporter;
@@ -43,14 +43,14 @@ interface ReportItemProps {
 
 function ReportItem({ time, list }: ReportItemProps) {
   const [showReportModal, setShowReportModal] = useState(false);
-  const [selectedReport, setSelectedReport] = useState<string>("");
+  const [selectedReport, setSelectedReport] = useState<number>();
 
   const renderReportItem = ({ item }: { item: ReportData }) => (
     <TouchableOpacity
       activeOpacity={0.8}
       style={styles.item}
       onPress={() => {
-        setSelectedReport(item.id);
+        setSelectedReport(item.reportId);
         setShowReportModal(true);
       }}
     >
@@ -73,7 +73,7 @@ function ReportItem({ time, list }: ReportItemProps) {
         <FlatList
           data={list}
           renderItem={renderReportItem}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item, index) => index.toString()}
           scrollEnabled={false}
         />
       </View>
@@ -86,7 +86,7 @@ function ReportItem({ time, list }: ReportItemProps) {
         <View style={styles.modalContainer}>
           <ReportDetail
             modalClose={() => setShowReportModal(false)}
-            reportDataId={selectedReport}
+            reportDataId={selectedReport!}
           />
         </View>
       </Modal>

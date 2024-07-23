@@ -11,6 +11,8 @@ import HeartRateList from "@/components/heartRateMonitoring/HeartRateList";
 import DateSet from "@/components/reportInquire/DateSet";
 import HelpModal from "@/components/heartRateMonitoring/HelpModal";
 import { useRoute } from "@react-navigation/native";
+import { getHeartRateAll } from "@/api/heartApi";
+import moment from "moment";
 
 const JsonData = [
   {
@@ -32,20 +34,54 @@ const JsonData = [
     loginId: "abd**",
     minBpm: 80,
     maxBpm: 150,
-    averageBpm: 140,
+    avgBpm: 140,
     minThreshold: 70,
     maxThreshold: 130,
     heartrateStatus: "caution",
   },
 ];
+interface heartRateType {
+  id: number;
+  name: string;
+  phone: string;
+  loginId: string;
+  minBpm: number;
+  maxBpm: number;
+  avgBpm: number;
+  minThreshold: number;
+  maxThreshold: number;
+  heartrateStatus: number | null;
+}
+
+
 
 export default function AdminHeartPage() {
-  const [allData, setAllData] = useState(JsonData);
+  const [allData, setAllData] = useState<heartRateType[]>([]);
   const [showHelpModal, setShowHelpModal] = useState(false);
 
+  const [date, setDate] = useState<{
+    startDate: string;
+    endDate: string;
+  }>({
+    startDate: moment().subtract(7, "days").format("YYYY-MM-DD"),
+    endDate: moment().format("YYYY-MM-DD"),
+  });
+
+  const fetchUserData = async (start: string, end: string) => {
+    try {
+      const data = await getHeartRateAll(start, end);
+
+      console.log(data);
+      setAllData(data);
+    } catch (error) {
+      console.error("Failed to fetch user data", error);
+    }
+  };
+
   useEffect(() => {
-    if (JsonData == null) return;
-    setAllData(JsonData);
+    // if (JsonData == null) return;
+    // setAllData(JsonData);
+    fetchUserData(date.startDate, date.endDate);
   }, []);
 
   const routes = [
@@ -62,19 +98,13 @@ export default function AdminHeartPage() {
         filteredData = allData;
         break;
       case "emergency":
-        filteredData = allData.filter(
-          (item) => item.heartrateStatus === "emergency"
-        );
+        filteredData = allData.filter((item) => item.heartrateStatus === 2);
         break;
       case "caution":
-        filteredData = allData.filter(
-          (item) => item.heartrateStatus === "caution"
-        );
+        filteredData = allData.filter((item) => item.heartrateStatus === 1);
         break;
       case "stability":
-        filteredData = allData.filter(
-          (item) => item.heartrateStatus === "stability"
-        );
+        filteredData = allData.filter((item) => item.heartrateStatus === 0);
         break;
       default:
         filteredData = allData;

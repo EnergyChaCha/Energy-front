@@ -4,35 +4,36 @@ import Colors from "@/constants/Colors";
 
 interface HeartRateCardProps {
   data: {
-    heartrateStatus: string;
+    id: number;
     name: string;
-    loginId: string;
     phone: string;
-    minThreshold: number;
-    maxThreshold: number;
-    averageBpm: number;
+    loginId: string;
     minBpm: number;
     maxBpm: number;
+    avgBpm: number;
+    minThreshold: number;
+    maxThreshold: number;
+    heartrateStatus: number | null;
   };
 }
 
 function HeartRateCard({ data }: HeartRateCardProps) {
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: number | null) => {
     switch (status) {
-      case "emergency":
+      case 2:
         return Colors.red;
-      case "caution":
+      case 1:
         return Colors.orange;
       default:
         return Colors.navy;
     }
   };
 
-  const statusMap: { [key: string]: string } = {
-    emergency: "위기",
-    caution: "주의",
-    stability: "안정",
-    help: "심박수 등급",
+  const statusMap: { [key: number]: string } = {
+    2: "위기",
+    1: "주의",
+    0: "안정",
+    // help: "심박수 등급",
   };
 
   const bpmToPosition = (bpm: number) => {
@@ -48,7 +49,7 @@ function HeartRateCard({ data }: HeartRateCardProps) {
             { color: getStatusColor(data.heartrateStatus) },
           ]}
         >
-          {statusMap[data.heartrateStatus]}
+          {data.heartrateStatus? statusMap[data.heartrateStatus]: "안정"}
         </Text>
         <View style={styles.userInfo}>
           <Text style={styles.info}>
@@ -96,7 +97,7 @@ function HeartRateCard({ data }: HeartRateCardProps) {
           <View
             style={[
               styles.averageBpm,
-              { left: `${bpmToPosition(data.averageBpm)}%` },
+              { left: `${bpmToPosition(data.avgBpm)}%` },
             ]}
           />
           <View
@@ -111,10 +112,10 @@ function HeartRateCard({ data }: HeartRateCardProps) {
           <View
             style={[
               styles.bpmLabel,
-              { left: `${bpmToPosition(data.averageBpm) - 9}%` },
+              { left: `${bpmToPosition(data.avgBpm) - 9}%` },
             ]}
           >
-            <Text style={styles.bpmLabelText}>{data.averageBpm}</Text>
+            <Text style={styles.bpmLabelText}>{Math.round(data.avgBpm)}</Text>
             <Text style={styles.bpmLabelText}>평균 심박수</Text>
           </View>
           <Text style={[styles.bpmLabel, { left: "96%" }]}>200</Text>

@@ -10,6 +10,19 @@ import Colors from "@/constants/Colors";
 import { useNavigation } from "@react-navigation/native";
 import HeartRateCard from "./HeartRateCard";
 
+// interface WorkerData {
+//   id: number;
+//   name: string;
+//   phone: string;
+//   loginId: string;
+//   minBpm: number;
+//   maxBpm: number;
+//   averageBpm: number;
+//   minThreshold: number;
+//   maxThreshold: number;
+//   heartrateStatus: string;
+// }
+
 interface WorkerData {
   id: number;
   name: string;
@@ -17,10 +30,10 @@ interface WorkerData {
   loginId: string;
   minBpm: number;
   maxBpm: number;
-  averageBpm: number;
+  avgBpm: number;
   minThreshold: number;
   maxThreshold: number;
-  heartrateStatus: string;
+  heartrateStatus: number | null;
 }
 
 interface HeartRateListProps {

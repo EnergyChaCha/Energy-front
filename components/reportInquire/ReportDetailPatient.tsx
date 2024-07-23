@@ -4,15 +4,13 @@ import {
   View,
   ScrollView,
   Text,
-  TouchableOpacity,
-  Alert,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import Colors from "@/constants/Colors";
 import CustomTextInput from "@/components/CustomTextInput";
+import moment from "moment";
 
 
-interface HealthInfo {
+interface healthInfoDto {
   emergencyNumber: string;
   emergencyRelationship: string;
   disease: string;
@@ -24,22 +22,23 @@ interface HealthInfo {
 }
 
 interface Patient {
-  id: string;
+  id: number;
   loginId: string;
   name: string;
-  gender: number;
+  gender: boolean;
   phone: string;
   workArea: string;
   department: string;
-  gps: string;
+  latitude: number;
+  longitude: number;
   status: string;
   address: string;
-  healthInfo: HealthInfo;
+  healthInfoDto: healthInfoDto;
 }
 
 interface ReportDetailPatientProps {
   patientData: Patient;
-  createdTime:string;
+  createdTime: string;
 }
 
 const ReportDetailPatient: React.FC<ReportDetailPatientProps> = ({
@@ -50,15 +49,26 @@ const ReportDetailPatient: React.FC<ReportDetailPatientProps> = ({
     <ScrollView style={styles.container}>
       <CustomTextInput
         label="장소 (GPS 좌표)"
-        value={patientData.gps}
+        value={`위도 ${patientData.latitude}${"\n"}경도 ${
+          patientData.longitude
+        }`}
         inputType="label"
       />
       <CustomTextInput
         label="신고시 BPM"
+        value={`${patientData.healthInfoDto.bpm} BPM`}
+        inputType="label"
+      />
+      <CustomTextInput
+        label="상태"
         value={patientData.status}
         inputType="label"
       />
-      <CustomTextInput label="날짜" value={createdTime} inputType="label" />
+      <CustomTextInput
+        label="날짜"
+        value={moment(createdTime).format("YYYY-MM-DD HH:mm:ss")}
+        inputType="label"
+      />
       <Text style={styles.subTitle}>회원정보</Text>
       <View style={styles.labelWrapper}>
         <View style={styles.labelSize}>
@@ -81,7 +91,7 @@ const ReportDetailPatient: React.FC<ReportDetailPatientProps> = ({
         <View style={styles.labelSize}>
           <CustomTextInput
             label="성별"
-            value={patientData.gender == 0 ? "여자" : "남자"}
+            value={patientData.gender ? "남자" : "여자"}
             inputType="label"
           />
         </View>
@@ -117,14 +127,14 @@ const ReportDetailPatient: React.FC<ReportDetailPatientProps> = ({
         <View style={styles.labelSize}>
           <CustomTextInput
             label="비상 연락처"
-            value={patientData.healthInfo.emergencyNumber}
+            value={patientData.healthInfoDto.emergencyNumber}
             inputType="label"
           />
         </View>
         <View style={styles.labelSize}>
           <CustomTextInput
             label="비상 연락처 관계"
-            value={patientData.healthInfo.emergencyRelationship}
+            value={patientData.healthInfoDto.emergencyRelationship}
             inputType="label"
           />
         </View>
@@ -134,14 +144,14 @@ const ReportDetailPatient: React.FC<ReportDetailPatientProps> = ({
         <View style={styles.labelSize}>
           <CustomTextInput
             label="혈액형"
-            value={patientData.healthInfo.blood}
+            value={patientData.healthInfoDto.blood}
             inputType="label"
           />
         </View>
         <View style={styles.labelSize}>
           <CustomTextInput
             label="장기기증자"
-            value={patientData.healthInfo.organDonor == 0 ? "예" : "아니오"}
+            value={patientData.healthInfoDto.organDonor == 0 ? "예" : "아니오"}
             inputType="label"
           />
         </View>
@@ -149,17 +159,17 @@ const ReportDetailPatient: React.FC<ReportDetailPatientProps> = ({
 
       <CustomTextInput
         label="기저질환"
-        value={patientData.healthInfo.disease}
+        value={patientData.healthInfoDto.disease}
         inputType="label"
       />
       <CustomTextInput
         label="알레르기"
-        value={patientData.healthInfo.allergy}
+        value={patientData.healthInfoDto.allergy}
         inputType="label"
       />
       <CustomTextInput
         label="복용중인 약"
-        value={patientData.healthInfo.medication}
+        value={patientData.healthInfoDto.medication}
         inputType="label"
       />
     </ScrollView>

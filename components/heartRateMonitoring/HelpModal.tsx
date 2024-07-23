@@ -15,16 +15,16 @@ function HelpModal({ modalClose }: HelpModalProps) {
   };
 
   const item = {
-    id: "worker_uuid_2",
+    id: 1,
     name: "이름",
     phone: "전화번호",
     loginId: "아이디",
     minBpm: 85,
     maxBpm: 110,
-    averageBpm: 97,
+    avgBpm: 97,
     minThreshold: 70,
     maxThreshold: 130,
-    heartrateStatus: "help",
+    heartrateStatus: 0,
   };
 
   return (

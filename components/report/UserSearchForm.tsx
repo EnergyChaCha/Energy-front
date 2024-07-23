@@ -67,8 +67,8 @@ const UserSearchForm = () => {
       const response = await postReport({
         patientId: selectedUser!.id,
         status: userState == "기타" ? userStateOther : userState,
-        latitude: 12.1,
-        longitude: 11.1,
+        latitude:0,
+        longitude: 0,
       });
       console.log(response);
       

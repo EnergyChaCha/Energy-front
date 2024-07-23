@@ -77,67 +77,57 @@ const UserHeartInfo = () => {
   const [minHeartValue, setMinHeartValue] = useState("0");
   const [maxHeartValue, setMaxHeartValue] = useState("0");
 
+  const fetchHeartRateData = async () => {
+    try {
+      const data = await getHeartRate(userId);
+
+      setMinHeartValue(data.minTreshold.toString());
+      setMaxHeartValue(data.maxTreshold.toString());
+    } catch (error) {
+      console.error("Failed to fetch heart rate data", error);
+    }
+  };
+
+  const fetchUserData = async () => {
+    try {
+      const data = await getHeartRateDetail(userId);
+      setUserInfo({
+        name: data.name,
+        birthdate: data.birthdate,
+        gender: data.gender,
+        status: data.status,
+        phone: data.phone,
+        loginId: data.loginId,
+        workArea: data.workArea,
+        department: data.department,
+      });
+    } catch (error) {
+      console.error("Failed to fetch user data", error);
+    }
+  };
+
+  const fetchHeartChart = async (
+    userId: number,
+    start: string,
+    end: string
+  ) => {
+    try {
+      const data = await getHeartRateChart(userId, start, end);
+      setHeartRateChart(data);
+    } catch (error) {
+      console.error("Failed to fetch user data", error);
+    }
+  };
+  
   useEffect(() => {
-    const fetchHeartRateData = async () => {
-      try {
-        const data = await getHeartRate(userId);
-
-        setMinHeartValue(data.minTreshold.toString());
-        setMaxHeartValue(data.maxTreshold.toString());
-      } catch (error) {
-        console.error("Failed to fetch heart rate data", error);
-      }
-    };
-
-    const fetchUserData = async () => {
-      try {
-        const data = await getHeartRateDetail(userId);
-        setUserInfo({
-          name: data.name,
-          birthdate: data.birthdate,
-          gender: data.gender,
-          status: data.status,
-          phone: data.phone,
-          loginId: data.loginId,
-          workArea: data.workArea,
-          department: data.department,
-        });
-      } catch (error) {
-        console.error("Failed to fetch user data", error);
-      }
-    };
-
-    const fetchHeartChart = async (
-      userId: number,
-      start: string,
-      end: string
-    ) => {
-      try {
-        const data = await getHeartRateChart(userId, start, end);
-        setHeartRateChart(data);
-      } catch (error) {
-        console.error("Failed to fetch user data", error);
-      }
-    };
-
     fetchHeartRateData();
-    // fetchUserData();
+    fetchUserData();
     fetchHeartChart(
       userId,
       moment().subtract(7, "days").format("YYYY-MM-DD"),
       moment().format("YYYY-MM-DD")
     );
   }, [userId]);
-
-  // const heartRateData = [
-  //   { date: "0", minBpm: 30, maxBpm: 200, averageBpm: 89 },
-  //   { date: "1", minBpm: 40, maxBpm: 120, averageBpm: 89 },
-  //   { date: "2", minBpm: 60, maxBpm: 110, averageBpm: 89 },
-  //   { date: "3", minBpm: 55, maxBpm: 100, averageBpm: 89 },
-  //   { date: "4", minBpm: 56, maxBpm: 120, averageBpm: 89 },
-  //   { date: "5", minBpm: 80, maxBpm: 130, averageBpm: 89 },
-  //   { date: "6", minBpm: 90, maxBpm: 160, averageBpm: 89 },
-  // ];
 
   const handleComplete = async () => {
     try {
@@ -156,40 +146,44 @@ const UserHeartInfo = () => {
     <ScrollView style={styles.container}>
       <Text style={styles.title}>회원 정보</Text>
 
-      <View style={styles.profileSection}>
-        <View style={styles.avatarContainer}>
-          <View
-            style={[
-              styles.iconContainer,
-              { backgroundColor: statusColorMap[userData.heartrateStatus] },
-            ]}
-          >
-            <MaterialCommunityIcons
-              name="heart-pulse"
-              size={24}
-              color="white"
-            />
-          </View>
+      {userInfo && (
+        <View style={styles.profileSection}>
+          <View style={styles.avatarContainer}>
+            <View
+              style={[
+                styles.iconContainer,
+                { backgroundColor: statusColorMap[userData.heartrateStatus] },
+              ]}
+            >
+              <MaterialCommunityIcons
+                name="heart-pulse"
+                size={24}
+                color="white"
+              />
+            </View>
 
-          <Text
-            style={[
-              styles.status,
-              { color: statusColorMap[userData.heartrateStatus] },
-            ]}
-          >
-            {statusMap[userData.heartrateStatus]}
-          </Text>
-          <Text style={styles.name}>{userData.name}</Text>
-          <Text style={styles.subInfo}>생년월일</Text>
-          <Text style={styles.subInfo}>성별</Text>
+            <Text
+              style={[
+                styles.status,
+                { color: statusColorMap[userData.heartrateStatus] },
+              ]}
+            >
+              {statusMap[userData.heartrateStatus]}
+            </Text>
+            <Text style={styles.name}>{userInfo.name}</Text>
+            <Text style={styles.subInfo}>{userInfo.birthdate}</Text>
+            <Text style={styles.subInfo}>
+              {userInfo.gender ? "남자" : "여자"}
+            </Text>
+          </View>
+          <View style={styles.detailsSection}>
+            <DetailRow label="아이디" value={userInfo.loginId} />
+            <DetailRow label="전화번호" value={userInfo.phone} />
+            <DetailRow label="근무지" value={userInfo.workArea} />
+            <DetailRow label="직무" value={userInfo.department} border={true} />
+          </View>
         </View>
-        <View style={styles.detailsSection}>
-          <DetailRow label="아이디" value={userData.loginId} />
-          <DetailRow label="전화번호" value={userData.phone} />
-          <DetailRow label="근무지" value="안산 HUB" />
-          <DetailRow label="직무" value="상차" border={true} />
-        </View>
-      </View>
+      )}
 
       <Text style={styles.title}>심박수 통계</Text>
       <Text style={styles.dateRange}>

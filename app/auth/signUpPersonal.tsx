@@ -16,6 +16,7 @@ import {
 import Colors from "@/constants/Colors";
 import CustomTextInput from "@/components/CustomTextInput";
 import { RootStackParamList } from "./signupType";
+import moment from "moment";
 
 const SignUpPersonal = () => {
   const [form, setForm] = useState({
@@ -51,20 +52,28 @@ const SignUpPersonal = () => {
   const route = useRoute<SignUpPersonalRouteProp>();
   const { signUpData } = route.params;
 
+  const validateBirthdate = (birthdate: string) => {
+    if (birthdate.length !== 8) return false;
+    const momentDate = moment(birthdate, "YYYYMMDD", true);
+    return momentDate.isValid() && momentDate.isBefore(moment());
+  };
+
   const handleSignUp = () => {
     if (!form.name || !form.phone || !form.birthdate) {
       Alert.alert("필수 항목을 모두 입력해주세요.");
       return;
     }
 
-    if (form.birthdate.length !== 8) {
-      Alert.alert("생년월일을 8자로 입력해주세요.");
+    if (!validateBirthdate(form.birthdate)) {
+      Alert.alert(
+        "오류",
+        "올바른 생년월일 형식이 아니거나 유효하지 않은 날짜입니다."
+      );
       return;
     }
-    const formattedBirth = `${form.birthdate.substring(
-      0,
-      4
-    )}-${form.birthdate.substring(4, 6)}-${form.birthdate.substring(6, 8)}`;
+    const formattedBirth = moment(form.birthdate, "YYYYMMDD").format(
+      "YYYY-MM-DD"
+    );
 
     navigation.navigate("auth/signUpWork", {
       signUpData,

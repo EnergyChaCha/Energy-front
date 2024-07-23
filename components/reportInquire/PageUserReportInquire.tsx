@@ -1,11 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet, View, ScrollView } from "react-native";
-import Colors from "@/constants/Colors";
-import SearchForm from "@/components/SearchForm";
 import TimeDivider from "@/components/reportInquire/TimeDivider";
-import ReportItem from "@/components/reportInquire/ReportItem";
 import DateSet from "@/components/reportInquire/DateSet";
-import { getReportListAll, getReportListUser } from "@/api/reportApi";
+import { getReportListUser } from "@/api/reportApi";
 import ReportItemUser from "./ReportItemUser";
 
 const JsonData = [
@@ -88,7 +85,7 @@ const getTodayDate = () => {
 };
 
 export default function UserReportInquire() {
-  const [data, setData] = useState<ReportData[]>(JsonData);
+  const [data, setData] = useState<ReportData[]>([]);
   const [date, setDate] = useState<{
     startDate: string;
     endDate: string;

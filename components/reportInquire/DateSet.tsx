@@ -16,8 +16,8 @@ function DateSet({ handleDate }: DateSetProps) {
     startDate: string | null;
     endDate: string | null;
   }>({
-    startDate: moment().startOf("day").format("YYYY-MM-DD"),
-    endDate: null,
+    startDate: moment().subtract(7, "days").format("YYYY-MM-DD"),
+    endDate: moment().format("YYYY-MM-DD"),
   });
 
   const handleDateRangeSelected = (startDate: string, endDate: string) => {

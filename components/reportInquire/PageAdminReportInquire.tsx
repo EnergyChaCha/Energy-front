@@ -9,63 +9,6 @@ import DateSet from "@/components/reportInquire/DateSet";
 import { getReportListAll } from "@/api/reportApi";
 import moment from "moment";
 
-const JsonData = [
-  {
-    id: "report_uuid_1",
-    gps: "위도, 경도",
-    createdTime: "2024-06-20T15:15:22",
-    checked: "확인한 관리자 id 1",
-    patient: {
-      id: "target_uuid_1",
-      loginId: "log**",
-      name: "김*차",
-      phone: "010-****-1234",
-    },
-    reporter: {
-      id: "reporter_uuid_2",
-      loginId: "log**",
-      name: "홍*동",
-      phone: "010-****-1234",
-    },
-  },
-  {
-    id: "report_uuid_2",
-    gps: "위도, 경도",
-    createdTime: "2024-06-20T15:25:22",
-    checked: "확인한 관리자 id 2",
-    patient: {
-      id: "target_uuid_1",
-      loginId: "log**",
-      name: "홍*동",
-      phone: "010-****-1234",
-    },
-    reporter: {
-      id: "reporter_uuid_1",
-      loginId: "log**",
-      name: "강*날",
-      phone: "010-****-1234",
-    },
-  },
-  {
-    id: "report_uuid_3",
-    gps: "위도, 경도",
-    createdTime: "2024-06-21T12:10:22",
-    checked: "확인한 관리자 id",
-    patient: {
-      id: "target_uuid_1",
-      loginId: "log**",
-      name: "홍*동",
-      phone: "010-****-1234",
-    },
-    reporter: {
-      id: "reporter_uuid_1",
-      loginId: "log**",
-      name: "홍*동",
-      phone: "010-****-1234",
-    },
-  },
-];
-
 interface Patient {
   id: string;
   loginId: string;
@@ -81,10 +24,10 @@ interface Reporter {
 }
 
 interface ReportData {
-  id: string;
-  latitude: string;
-  longitude: string;
-  bpm: string;
+  reportId: number;
+  latitude: number;
+  longitude: number;
+  bpm: number;
   createdTime: string;
   patient: Patient;
   reporter: Reporter;
@@ -134,7 +77,7 @@ export default function AdminReportInquire() {
   };
   useEffect(() => {
     fetchReportListAll(
-      moment().format("YYYY-MM-DD"),
+      moment().subtract(7,'days').format("YYYY-MM-DD"),
       moment().format("YYYY-MM-DD")
     );
   }, []);
@@ -142,8 +85,6 @@ export default function AdminReportInquire() {
   const groupedData = useMemo(() => groupDataByDateAndHour(data), [data]);
 
   const handleDate = (startDate: string | null, endDate: string | null) => {
-    console.log("startDate : ", startDate);
-    console.log("endDate : ", endDate);
     fetchReportListAll(startDate!, endDate!);
   };
 
