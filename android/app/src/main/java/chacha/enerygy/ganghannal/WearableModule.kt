@@ -2,7 +2,9 @@ package chacha.energy.ganghannal
 
 import android.util.Log
 import chacha.enerygy.ganghannal.dto.Hello
+import com.facebook.react.ReactNativeHost
 import com.facebook.react.bridge.*
+import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
@@ -11,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+@ReactModule(name = "WearModule")
 class WearableModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
     private val dataClient = Wearable.getDataClient(reactContext)
@@ -65,6 +68,17 @@ class WearableModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
             } catch (e: Exception) {
                 promise.reject("ERROR", "Error sending message: ${e.message}")
             }
+        }
+    }
+
+    // React Native에 이벤트를 전송하는 메서드
+    @ReactMethod
+    fun sendEventToReactNative(eventName: String, message: String) {
+        val reactContext = reactApplicationContext
+        if (reactContext.hasActiveCatalystInstance()) {
+            reactContext
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+                .emit(eventName, message)
         }
     }
 

@@ -8,6 +8,7 @@ import chacha.enerygy.ganghannal.MessageModule
 import chacha.enerygy.ganghannal.dto.Hello
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
+import com.facebook.react.bridge.ReactContext
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
 import com.google.android.gms.wearable.DataEvent
@@ -34,35 +35,29 @@ class MainActivity : ReactActivity() {
       val wearableListenerService = WearableListenerService()
       wearableListenerService.sayHello()
 
-//      Wearable.getDataClient(this).addListener { dataEvents ->
-//          for (event in dataEvents) {
-//              Log.i("메시지", "메인 액티비티 메시지 받음: ${event.dataItem.uri.path}")
-//              val item = event.dataItem
-//              val dataMap = DataMapItem.fromDataItem(item).dataMap
-//              Log.i("메시지", "메인 액티비티 메시지 받음: ${dataMap.toString()}")
-//
-//              if (event.type == DataEvent.TYPE_CHANGED) {
-//
-//                  if (item.uri.path!!.compareTo("/path") == 0) {
-//                      val dataMap = DataMapItem.fromDataItem(item).dataMap
-//                      val value = dataMap.getString("key")
-//                      // 데이터 처리
-//                  }
-//              }
-//          }
-//      }
 
       Wearable.getMessageClient(this).addListener { event ->
           val dataString = String(event.data, Charsets.UTF_8)
           val gson = Gson()
           val dataObject = gson.fromJson(dataString, Hello::class.java)
           Log.i("메시지", "메인 액티비티 메시지 받음: ${event.path} ${dataObject.toString()}")
+          sendEventToReactNative("CustomEvent", event.path)
       }
 
       val messageModule = MessageModule(this)
-      messageModule.sendMessage("hello-wear", "앱에서 보낸 메시지")
+      messageModule.sendMessage("hello-app-wear", "앱에서 보낸 메시지")
 
   }
+    private fun sendEventToReactNative(eventName: String, message: String) {
+        val reactContext: ReactContext? = reactInstanceManager?.currentReactContext
+        if (reactContext != null && reactContext.hasActiveCatalystInstance()) {
+            // 네이티브 모듈의 메서드를 통해 이벤트 전송
+            Log.i("메시지", "리액트로 메시지 전송2")
+            val myNativeModule = reactContext
+                .getNativeModule(WearableModule::class.java)
+            myNativeModule?.sendEventToReactNative(eventName, message)
+        }
+    }
 
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule
