@@ -62,9 +62,9 @@ const Login = () => {
         <Text style={styles.loginButtonText}>완료</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.signupButton}>
+      {/* <TouchableOpacity style={styles.signupButton}>
         <Text style={styles.signupButtonText}>바이오인증</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <TouchableOpacity style={styles.signupButton} onPress={signUpClick}>
         <Text style={styles.signupButtonText}>회원가입</Text>
