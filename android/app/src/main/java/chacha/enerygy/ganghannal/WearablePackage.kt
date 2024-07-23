@@ -7,7 +7,7 @@ import com.facebook.react.uimanager.ViewManager
 
 class WearablePackage : ReactPackage {
     override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
-        return listOf(WearModule(reactContext))
+        return listOf(WearableModule(reactContext))
     }
 
     override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {

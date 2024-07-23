@@ -1,7 +1,12 @@
 package chacha.energy.ganghannal
 
 import com.facebook.react.bridge.*
+import com.facebook.react.modules.core.DeviceEventManagerModule
+import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class WearableModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 

@@ -1,4 +1,4 @@
-package chacha.enerygy.ganghannal
+package chacha.energy.ganghannal
 
 import android.app.Application
 import android.content.res.Configuration
