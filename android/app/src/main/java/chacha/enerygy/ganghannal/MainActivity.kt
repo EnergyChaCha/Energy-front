@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import chacha.enerygy.ganghannal.MessageModule
 import chacha.enerygy.ganghannal.dto.Hello
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
@@ -57,6 +58,9 @@ class MainActivity : ReactActivity() {
           val dataObject = gson.fromJson(dataString, Hello::class.java)
           Log.i("메시지", "메인 액티비티 메시지 받음: ${event.path} ${dataObject.toString()}")
       }
+
+      val messageModule = MessageModule(this)
+      messageModule.sendMessage("hello-wear", "앱에서 보낸 메시지")
 
   }
 

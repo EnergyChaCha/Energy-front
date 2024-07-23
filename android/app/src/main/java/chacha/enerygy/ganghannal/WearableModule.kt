@@ -1,9 +1,12 @@
 package chacha.energy.ganghannal
 
+import android.util.Log
+import chacha.enerygy.ganghannal.dto.Hello
 import com.facebook.react.bridge.*
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,6 +27,26 @@ class WearableModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
     @ReactMethod
     fun removeListeners(count: Int) {
 // 리스너 제거 (필요한 경우)
+    }
+
+    fun sendMessage(path: String, message: String){
+        val data = Hello(message)
+        val gson = Gson()
+        val dataJson = gson.toJson(data)
+        val sendData = dataJson.toByteArray(Charsets.UTF_8)
+
+        CoroutineScope(Dispatchers.Default).launch {
+            try {
+                val nodes = Tasks.await(nodeClient.connectedNodes)
+                nodes.forEach { node ->
+                    val result = Tasks.await(messageClient.sendMessage(node.id, path, sendData))
+                    Log.i("메시지 보내기 1", message.toString())
+                }
+            } catch (e: Exception) {
+                Log.i("메시지 보내기 1 에러", e.message.toString())
+            }
+        }
+
     }
 
     @ReactMethod

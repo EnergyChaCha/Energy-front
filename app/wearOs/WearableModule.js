@@ -1,15 +1,15 @@
-// import { NativeModules } from "react-native";
+import { NativeModules } from "react-native";
 
-// const { WearModule } = NativeModules;
+const { WearModule } = NativeModules;
 
-// const sendMessageToWear = async () => {
-//   try {
-//     const result = await WearModule.sendMessageToWear(
-//       "/message-path",
-//       "Hello WearOS!"
-//     );
-//     console.log(result);
-//   } catch (error) {
-//     console.error("Error sending message to WearOS:", error);
-//   }
-// };
+export const sendMessageToWear = async (path, message) => {
+  try {
+    const result = await WearModule.sendMessageToWear(
+        path,
+        message
+    );
+    console.log(result);
+  } catch (error) {
+    console.error("Error sending message to WearOS:", error);
+  }
+};
