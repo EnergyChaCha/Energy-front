@@ -3,7 +3,7 @@ import {sendMessageToWear, myNativeModuleEvents}  from './WearableModule';
 const { WearableModule } = NativeModules;
 const wearEventEmitter = new NativeEventEmitter(WearableModule);
 
-import {postBpm, getMyInfo, postReport, getNotificatioonThresholdExceed} from '../../api/wearOSApi'
+import {postBpm, getMyInfo, postReport, getNotificatioonThresholdExceed, getNotificatioonReport} from '../../api/wearOSApi'
 
 const paths = {
   POST_BPM: "POST_BPM",
@@ -70,6 +70,20 @@ export const handleEvent = async(orderMessage) => {
   else if (path == paths.GET_ALERT_LIST) {
     try {
       const res = await getNotificatioonThresholdExceed();
+      if (!res) {
+        return
+      }
+      await sendMessageToWear(path, JSON.stringify(res))
+    } catch (error) {
+      setErrorMessage("에러");
+      console.log(error);
+    }
+  }
+
+  // 신고 알림 리스트
+  else if (path == paths.GET_REPORT_LIST) {
+    try {
+      const res = await getNotificatioonReport();
       if (!res) {
         return
       }

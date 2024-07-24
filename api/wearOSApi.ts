@@ -51,3 +51,16 @@ export const getNotificatioonThresholdExceed = async () => {
         console.log(error);
     }
 };
+
+// WA-05 신고 알림 리스트 조회
+export const getNotificatioonReport = async () => {
+    try {
+        const response = await api.get("/watch/notification/report");
+        if (response.data.status == 401) {
+            return null;
+        }
+        return response.data.result;
+    } catch (error) {
+        console.log(error);
+    }
+};
