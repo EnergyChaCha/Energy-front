@@ -41,3 +41,13 @@ export const postReport = async (report: report) => {
         console.log(error);
     }
 };
+
+// WA-04 심박수 초과 알림 리스트 조회
+export const getNotificatioonThresholdExceed = async () => {
+    try {
+        const response = await api.get("/watch/notification/heartrate");
+        return response.data.result;
+    } catch (error) {
+        console.log(error);
+    }
+};
