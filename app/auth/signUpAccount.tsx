@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     color: "#4d4d4d",
     fontSize: 13,
     position: "absolute",
-    fontFamily: "sansNoto5",
+    fontFamily: "notoSans4",
     lineHeight: 20,
     bottom: -10,
     left: 7,
