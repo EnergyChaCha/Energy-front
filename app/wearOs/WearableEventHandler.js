@@ -3,7 +3,7 @@ import {sendMessageToWear, myNativeModuleEvents}  from './WearableModule';
 const { WearableModule } = NativeModules;
 const wearEventEmitter = new NativeEventEmitter(WearableModule);
 
-import {postBpm, getMyInfo} from '../../api/wearOSApi'
+import {postBpm, getMyInfo, postReport} from '../../api/wearOSApi'
 
 const paths = {
   POST_BPM: "POST_BPM",
@@ -36,6 +36,27 @@ export const handleEvent = async(orderMessage) => {
       // console.log(`${paths.MEMBER_INFO} 리액트에서 보낼거야: ${JSON.stringify(res)}`)
       if (!res) {
         // console.log("아직 로그인을 안 했어요")
+        return
+      }
+      await sendMessageToWear(path, JSON.stringify(res))
+    } catch (error) {
+      setErrorMessage("에러");
+      console.log(error);
+    }
+  }
+
+  else if (path == paths.POST_REPORT) {
+    const parsed = JSON.parse(data)
+    const bpm = parsed.bpm
+    const longitude = parsed.longitude
+    const latitude = parsed.latitude
+    console.log(`bpm: ${bpm}  longitude: ${longitude}  latitude: ${latitude}`)
+
+    const report = {bpm, longitude, latitude}
+
+    try {
+      const res = await postReport(report);
+      if (!res) {
         return
       }
       await sendMessageToWear(path, JSON.stringify(res))
