@@ -77,7 +77,7 @@ export default function TabLayout() {
       <Tab.Screen
         name="Report"
         component={Report}
-        options={{ title: "Report" }}
+        options={{ title: "신고하기" }}
       />
       <Tab.Screen
         name="Setting"

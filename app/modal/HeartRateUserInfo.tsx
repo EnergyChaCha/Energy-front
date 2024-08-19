@@ -150,14 +150,11 @@ const UserHeartInfo = () => {
         <View style={styles.profileSection}>
           <View style={styles.avatarContainer}>
             <View
-              style={[
-                styles.iconContainer,
-                { backgroundColor: statusColorMap[userData.heartrateStatus] },
-              ]}
+              style={[styles.iconContainer, { backgroundColor: Colors.navy }]}
             >
               <MaterialCommunityIcons
                 name="heart-pulse"
-                size={24}
+                size={40}
                 color="white"
               />
             </View>
@@ -282,8 +279,6 @@ const styles = StyleSheet.create({
     color: "red",
     fontSize: 15,
     lineHeight: 20,
-    marginTop: 5,
-    marginBottom: 10,
   },
   name: {
     fontSize: 18,
@@ -382,12 +377,16 @@ const styles = StyleSheet.create({
   },
 
   iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 70,
+    height: 70,
+    borderRadius: 80,
     backgroundColor: Colors.red,
     justifyContent: "center",
     alignItems: "center",
+    position: "relative",
+    top:10
+
+
   },
   bpmUnit: {
     fontSize: 14,

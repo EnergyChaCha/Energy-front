@@ -30,6 +30,8 @@ function ReceiverInfo() {
         const userId = await getUserID();
         if (userId == undefined) return;
         const data = await getReportMyInfo(parseInt(userId));
+        console.log(data);
+        
         setUserInfo({
           id: data.id,
           name: data.name,
@@ -50,28 +52,35 @@ function ReceiverInfo() {
         <>
           <View style={styles.labelSize}>
             <CustomTextInput
-              label="아이디"
+              label="이름"
               value={userInfo.name}
               inputType="label"
             />
           </View>
+          {/* <View style={styles.labelSize}>
+            <CustomTextInput
+              label="성별"
+              value={userInfo.}
+              inputType="label"
+            />
+          </View> */}
           <View style={styles.labelSize}>
             <CustomTextInput
-              label="이름"
+              label="전화번호"
               value={userInfo.phone}
               inputType="label"
             />
           </View>
-          <View style={styles.labelSize}>
+          <View style={styles.labelSize }>
             <CustomTextInput
-              label="성별"
+              label="근무지"
               value={userInfo.workArea}
               inputType="label"
             />
           </View>
           <View style={styles.labelSize}>
             <CustomTextInput
-              label="전화번호"
+              label="직무"
               value={userInfo.department}
               inputType="label"
             />
